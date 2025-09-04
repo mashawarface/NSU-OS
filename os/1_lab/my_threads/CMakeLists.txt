@@ -5,7 +5,7 @@ set(CMAKE_C_COMPILER clang)
 
 find_package(Threads REQUIRED)
 
-add_executable(my_thread src/my_thread.c)
+add_executable(my_thread src/thread3.c)
 
 target_link_libraries(my_thread ${CMAKE_THREAD_LIBS_INIT})
 
