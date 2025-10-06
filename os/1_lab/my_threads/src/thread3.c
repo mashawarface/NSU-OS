@@ -6,7 +6,7 @@
 void *my_thread(void *arg) {
   printf("pthread_self(): %ld\n", pthread_self());
 
-  // pthread_detach(pthread_self());
+  pthread_detach(pthread_self());
 
   return NULL;
 }

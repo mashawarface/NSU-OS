@@ -1,0 +1,1 @@
+clang CMakeFiles/my_thread.dir/src/thread3.c.o -o my_thread 
