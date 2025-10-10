@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/mary/3d_course/os/1_lab/my_threads/src/thread3.c" "CMakeFiles/my_thread.dir/src/thread3.c.o" "gcc" "CMakeFiles/my_thread.dir/src/thread3.c.o.d"
+  "" "my_thread" "gcc" "CMakeFiles/my_thread.dir/link.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

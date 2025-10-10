@@ -7,6 +7,16 @@ find_package(Threads REQUIRED)
 
 add_executable(my_thread src/thread3.c)
 
-target_link_libraries(my_thread ${CMAKE_THREAD_LIBS_INIT})
+target_compile_options(my_thread PRIVATE
+    -Wall
+    -Wextra
+    -pthread
+    -fsanitize=address,undefined,leak
+    -fno-omit-frame-pointer
+)
 
-target_compile_options(my_thread PRIVATE -Wall -Wextra -pthread)
+target_link_options(my_thread PRIVATE
+    -fsanitize=address,undefined
+)
+
+target_link_libraries(my_thread ${CMAKE_THREAD_LIBS_INIT})

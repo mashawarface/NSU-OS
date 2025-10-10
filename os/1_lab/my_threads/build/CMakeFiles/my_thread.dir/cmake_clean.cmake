@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/my_thread.dir/link.d"
   "CMakeFiles/my_thread.dir/src/thread3.c.o"
   "CMakeFiles/my_thread.dir/src/thread3.c.o.d"
   "my_thread"
