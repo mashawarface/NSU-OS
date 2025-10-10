@@ -11,6 +11,7 @@ void *my_thread(void *arg) {
   return NULL;
 }
 
+
 int main() {
   pthread_t tid;
   pthread_attr_t attr;

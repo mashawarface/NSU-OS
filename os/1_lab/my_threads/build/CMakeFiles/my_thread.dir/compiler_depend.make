@@ -68,7 +68,8 @@ CMakeFiles/my_thread.dir/src/thread3.c.o: /home/mary/3d_course/os/1_lab/my_threa
   /usr/lib/llvm-18/lib/clang/18/include/__stddef_null.h \
   /usr/lib/llvm-18/lib/clang/18/include/__stddef_size_t.h \
   /usr/lib/llvm-18/lib/clang/18/include/stdarg.h \
-  /usr/lib/llvm-18/lib/clang/18/include/stddef.h
+  /usr/lib/llvm-18/lib/clang/18/include/stddef.h \
+  /usr/lib/llvm-18/lib/clang/18/share/asan_ignorelist.txt
 
 
 /usr/lib/llvm-18/lib/clang/18/include/stdarg.h:
@@ -110,6 +111,8 @@ CMakeFiles/my_thread.dir/src/thread3.c.o: /home/mary/3d_course/os/1_lab/my_threa
 /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h:
 
 /usr/include/x86_64-linux-gnu/bits/endian.h:
+
+/usr/lib/llvm-18/lib/clang/18/share/asan_ignorelist.txt:
 
 /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
 
