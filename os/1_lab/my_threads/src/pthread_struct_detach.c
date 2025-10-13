@@ -1,5 +1,6 @@
 #include <pthread.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -9,6 +10,8 @@ typedef struct {
 } my_struct;
 
 void *my_thread(void *arg) {
+  (void)arg;
+
   int err = pthread_detach(pthread_self());
 
   if (err != 0) {
@@ -20,30 +23,32 @@ void *my_thread(void *arg) {
 
   printf("%d %s\n", m->a, m->b);
 
+  free(m);
+
   return NULL;
 }
 
 int main() {
   pthread_t tid;
 
-  my_struct m;
+  my_struct *m = malloc(sizeof(my_struct));
 
-  m.a = 1;
-  m.b = "a";
+  if (m == NULL) {
+    printf("Error in memallocation!\n");
+    return -1;
+  }
 
-  int err = pthread_create(&tid, NULL, my_thread, &m);
+  m->a = 1;
+  m->b = "a";
+
+  int err = pthread_create(&tid, NULL, my_thread, m);
 
   if (err != 0) {
     printf("Error in creating thread because of %s!\n", strerror(err));
     return -1;
   }
 
-  err = pthread_join(tid, NULL);
-
-  if (err != 0) {
-    printf("Can`t join thread because of %s\n", strerror(err));
-    return -1;
-  }
+  pthread_exit(NULL);
 
   return 0;
 }

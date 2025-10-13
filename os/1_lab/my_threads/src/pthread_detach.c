@@ -1,31 +1,39 @@
-#define _GNU_SOURCE
 #include <pthread.h>
 #include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 
 void *my_thread(void *arg) {
-  printf("pthread_self(): %ld\n", pthread_self());
+  (void)arg;
 
-  pthread_detach(pthread_self());
+  int err = pthread_detach(pthread_self());
+
+  if (err != 0) {
+    printf("Error in detaching thread because of %s!\n", strerror(err));
+    return NULL;
+  }
+
+  printf("self: %ld\n", pthread_self());
 
   return NULL;
 }
 
-
 int main() {
   pthread_t tid;
-  pthread_attr_t attr;
   long counter = 0;
 
-  // pthread_attr_init(&attr);
-  // pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-
   while (1) {
-    pthread_create(&tid, &attr, my_thread, NULL);
-    printf("%ld", ++counter);
-  }
+    int err = pthread_create(&tid, NULL, my_thread, NULL);
 
-  // pthread_attr_destroy(&attr);
+    if (err != 0) {
+      printf("STOP WORKING BC OF %s\n", strerror(err));
+    }
+
+    if (err == 0) {
+      counter++;
+      printf("%ld\n", counter);
+    }
+  }
 
   return 0;
 }

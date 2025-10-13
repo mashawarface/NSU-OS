@@ -54,5 +54,9 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/my_thread.dir/DependInfo.cmake"
+  "CMakeFiles/pthread_creation.dir/DependInfo.cmake"
+  "CMakeFiles/pthread_detach.dir/DependInfo.cmake"
+  "CMakeFiles/pthread_retval.dir/DependInfo.cmake"
+  "CMakeFiles/pthread_struct.dir/DependInfo.cmake"
+  "CMakeFiles/pthread_struct_detach.dir/DependInfo.cmake"
   )

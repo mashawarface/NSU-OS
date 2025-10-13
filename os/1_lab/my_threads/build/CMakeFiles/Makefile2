@@ -63,11 +63,19 @@ CMAKE_BINARY_DIR = /home/mary/3d_course/os/1_lab/my_threads/build
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/my_thread.dir/all
+all: CMakeFiles/pthread_creation.dir/all
+all: CMakeFiles/pthread_detach.dir/all
+all: CMakeFiles/pthread_retval.dir/all
+all: CMakeFiles/pthread_struct.dir/all
+all: CMakeFiles/pthread_struct_detach.dir/all
 .PHONY : all
 
 # The main recursive "codegen" target.
-codegen: CMakeFiles/my_thread.dir/codegen
+codegen: CMakeFiles/pthread_creation.dir/codegen
+codegen: CMakeFiles/pthread_detach.dir/codegen
+codegen: CMakeFiles/pthread_retval.dir/codegen
+codegen: CMakeFiles/pthread_struct.dir/codegen
+codegen: CMakeFiles/pthread_struct_detach.dir/codegen
 .PHONY : codegen
 
 # The main recursive "preinstall" target.
@@ -75,40 +83,172 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/my_thread.dir/clean
+clean: CMakeFiles/pthread_creation.dir/clean
+clean: CMakeFiles/pthread_detach.dir/clean
+clean: CMakeFiles/pthread_retval.dir/clean
+clean: CMakeFiles/pthread_struct.dir/clean
+clean: CMakeFiles/pthread_struct_detach.dir/clean
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/my_thread.dir
+# Target rules for target CMakeFiles/pthread_creation.dir
 
 # All Build rule for target.
-CMakeFiles/my_thread.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_thread.dir/build.make CMakeFiles/my_thread.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_thread.dir/build.make CMakeFiles/my_thread.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles --progress-num=1,2 "Built target my_thread"
-.PHONY : CMakeFiles/my_thread.dir/all
+CMakeFiles/pthread_creation.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_creation.dir/build.make CMakeFiles/pthread_creation.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_creation.dir/build.make CMakeFiles/pthread_creation.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles --progress-num=1,2 "Built target pthread_creation"
+.PHONY : CMakeFiles/pthread_creation.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/my_thread.dir/rule: cmake_check_build_system
+CMakeFiles/pthread_creation.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/my_thread.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/pthread_creation.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles 0
-.PHONY : CMakeFiles/my_thread.dir/rule
+.PHONY : CMakeFiles/pthread_creation.dir/rule
 
 # Convenience name for target.
-my_thread: CMakeFiles/my_thread.dir/rule
-.PHONY : my_thread
+pthread_creation: CMakeFiles/pthread_creation.dir/rule
+.PHONY : pthread_creation
 
 # codegen rule for target.
-CMakeFiles/my_thread.dir/codegen:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_thread.dir/build.make CMakeFiles/my_thread.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles --progress-num=1,2 "Finished codegen for target my_thread"
-.PHONY : CMakeFiles/my_thread.dir/codegen
+CMakeFiles/pthread_creation.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_creation.dir/build.make CMakeFiles/pthread_creation.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles --progress-num=1,2 "Finished codegen for target pthread_creation"
+.PHONY : CMakeFiles/pthread_creation.dir/codegen
 
 # clean rule for target.
-CMakeFiles/my_thread.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_thread.dir/build.make CMakeFiles/my_thread.dir/clean
-.PHONY : CMakeFiles/my_thread.dir/clean
+CMakeFiles/pthread_creation.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_creation.dir/build.make CMakeFiles/pthread_creation.dir/clean
+.PHONY : CMakeFiles/pthread_creation.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/pthread_detach.dir
+
+# All Build rule for target.
+CMakeFiles/pthread_detach.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_detach.dir/build.make CMakeFiles/pthread_detach.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_detach.dir/build.make CMakeFiles/pthread_detach.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles --progress-num=3,4 "Built target pthread_detach"
+.PHONY : CMakeFiles/pthread_detach.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/pthread_detach.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/pthread_detach.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles 0
+.PHONY : CMakeFiles/pthread_detach.dir/rule
+
+# Convenience name for target.
+pthread_detach: CMakeFiles/pthread_detach.dir/rule
+.PHONY : pthread_detach
+
+# codegen rule for target.
+CMakeFiles/pthread_detach.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_detach.dir/build.make CMakeFiles/pthread_detach.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles --progress-num=3,4 "Finished codegen for target pthread_detach"
+.PHONY : CMakeFiles/pthread_detach.dir/codegen
+
+# clean rule for target.
+CMakeFiles/pthread_detach.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_detach.dir/build.make CMakeFiles/pthread_detach.dir/clean
+.PHONY : CMakeFiles/pthread_detach.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/pthread_retval.dir
+
+# All Build rule for target.
+CMakeFiles/pthread_retval.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_retval.dir/build.make CMakeFiles/pthread_retval.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_retval.dir/build.make CMakeFiles/pthread_retval.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles --progress-num=5,6 "Built target pthread_retval"
+.PHONY : CMakeFiles/pthread_retval.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/pthread_retval.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/pthread_retval.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles 0
+.PHONY : CMakeFiles/pthread_retval.dir/rule
+
+# Convenience name for target.
+pthread_retval: CMakeFiles/pthread_retval.dir/rule
+.PHONY : pthread_retval
+
+# codegen rule for target.
+CMakeFiles/pthread_retval.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_retval.dir/build.make CMakeFiles/pthread_retval.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles --progress-num=5,6 "Finished codegen for target pthread_retval"
+.PHONY : CMakeFiles/pthread_retval.dir/codegen
+
+# clean rule for target.
+CMakeFiles/pthread_retval.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_retval.dir/build.make CMakeFiles/pthread_retval.dir/clean
+.PHONY : CMakeFiles/pthread_retval.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/pthread_struct.dir
+
+# All Build rule for target.
+CMakeFiles/pthread_struct.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct.dir/build.make CMakeFiles/pthread_struct.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct.dir/build.make CMakeFiles/pthread_struct.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles --progress-num=7,8 "Built target pthread_struct"
+.PHONY : CMakeFiles/pthread_struct.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/pthread_struct.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/pthread_struct.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles 0
+.PHONY : CMakeFiles/pthread_struct.dir/rule
+
+# Convenience name for target.
+pthread_struct: CMakeFiles/pthread_struct.dir/rule
+.PHONY : pthread_struct
+
+# codegen rule for target.
+CMakeFiles/pthread_struct.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct.dir/build.make CMakeFiles/pthread_struct.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles --progress-num=7,8 "Finished codegen for target pthread_struct"
+.PHONY : CMakeFiles/pthread_struct.dir/codegen
+
+# clean rule for target.
+CMakeFiles/pthread_struct.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct.dir/build.make CMakeFiles/pthread_struct.dir/clean
+.PHONY : CMakeFiles/pthread_struct.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/pthread_struct_detach.dir
+
+# All Build rule for target.
+CMakeFiles/pthread_struct_detach.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct_detach.dir/build.make CMakeFiles/pthread_struct_detach.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct_detach.dir/build.make CMakeFiles/pthread_struct_detach.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles --progress-num=9,10 "Built target pthread_struct_detach"
+.PHONY : CMakeFiles/pthread_struct_detach.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/pthread_struct_detach.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/pthread_struct_detach.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles 0
+.PHONY : CMakeFiles/pthread_struct_detach.dir/rule
+
+# Convenience name for target.
+pthread_struct_detach: CMakeFiles/pthread_struct_detach.dir/rule
+.PHONY : pthread_struct_detach
+
+# codegen rule for target.
+CMakeFiles/pthread_struct_detach.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct_detach.dir/build.make CMakeFiles/pthread_struct_detach.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles --progress-num=9,10 "Finished codegen for target pthread_struct_detach"
+.PHONY : CMakeFiles/pthread_struct_detach.dir/codegen
+
+# clean rule for target.
+CMakeFiles/pthread_struct_detach.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct_detach.dir/build.make CMakeFiles/pthread_struct_detach.dir/clean
+.PHONY : CMakeFiles/pthread_struct_detach.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

@@ -1,3 +1,7 @@
-/home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles/my_thread.dir
+/home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles/pthread_creation.dir
+/home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles/pthread_detach.dir
+/home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles/pthread_retval.dir
+/home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles/pthread_struct.dir
+/home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles/pthread_struct_detach.dir
 /home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles/edit_cache.dir
 /home/mary/3d_course/os/1_lab/my_threads/build/CMakeFiles/rebuild_cache.dir

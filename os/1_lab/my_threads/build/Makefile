@@ -117,41 +117,189 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named my_thread
+# Target rules for targets named pthread_creation
 
 # Build rule for target.
-my_thread: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 my_thread
-.PHONY : my_thread
+pthread_creation: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 pthread_creation
+.PHONY : pthread_creation
 
 # fast build rule for target.
-my_thread/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_thread.dir/build.make CMakeFiles/my_thread.dir/build
-.PHONY : my_thread/fast
+pthread_creation/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_creation.dir/build.make CMakeFiles/pthread_creation.dir/build
+.PHONY : pthread_creation/fast
 
-src/thread3.o: src/thread3.c.o
-.PHONY : src/thread3.o
+#=============================================================================
+# Target rules for targets named pthread_detach
+
+# Build rule for target.
+pthread_detach: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 pthread_detach
+.PHONY : pthread_detach
+
+# fast build rule for target.
+pthread_detach/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_detach.dir/build.make CMakeFiles/pthread_detach.dir/build
+.PHONY : pthread_detach/fast
+
+#=============================================================================
+# Target rules for targets named pthread_retval
+
+# Build rule for target.
+pthread_retval: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 pthread_retval
+.PHONY : pthread_retval
+
+# fast build rule for target.
+pthread_retval/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_retval.dir/build.make CMakeFiles/pthread_retval.dir/build
+.PHONY : pthread_retval/fast
+
+#=============================================================================
+# Target rules for targets named pthread_struct
+
+# Build rule for target.
+pthread_struct: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 pthread_struct
+.PHONY : pthread_struct
+
+# fast build rule for target.
+pthread_struct/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct.dir/build.make CMakeFiles/pthread_struct.dir/build
+.PHONY : pthread_struct/fast
+
+#=============================================================================
+# Target rules for targets named pthread_struct_detach
+
+# Build rule for target.
+pthread_struct_detach: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 pthread_struct_detach
+.PHONY : pthread_struct_detach
+
+# fast build rule for target.
+pthread_struct_detach/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct_detach.dir/build.make CMakeFiles/pthread_struct_detach.dir/build
+.PHONY : pthread_struct_detach/fast
+
+src/pthread_creation.o: src/pthread_creation.c.o
+.PHONY : src/pthread_creation.o
 
 # target to build an object file
-src/thread3.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_thread.dir/build.make CMakeFiles/my_thread.dir/src/thread3.c.o
-.PHONY : src/thread3.c.o
+src/pthread_creation.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_creation.dir/build.make CMakeFiles/pthread_creation.dir/src/pthread_creation.c.o
+.PHONY : src/pthread_creation.c.o
 
-src/thread3.i: src/thread3.c.i
-.PHONY : src/thread3.i
+src/pthread_creation.i: src/pthread_creation.c.i
+.PHONY : src/pthread_creation.i
 
 # target to preprocess a source file
-src/thread3.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_thread.dir/build.make CMakeFiles/my_thread.dir/src/thread3.c.i
-.PHONY : src/thread3.c.i
+src/pthread_creation.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_creation.dir/build.make CMakeFiles/pthread_creation.dir/src/pthread_creation.c.i
+.PHONY : src/pthread_creation.c.i
 
-src/thread3.s: src/thread3.c.s
-.PHONY : src/thread3.s
+src/pthread_creation.s: src/pthread_creation.c.s
+.PHONY : src/pthread_creation.s
 
 # target to generate assembly for a file
-src/thread3.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_thread.dir/build.make CMakeFiles/my_thread.dir/src/thread3.c.s
-.PHONY : src/thread3.c.s
+src/pthread_creation.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_creation.dir/build.make CMakeFiles/pthread_creation.dir/src/pthread_creation.c.s
+.PHONY : src/pthread_creation.c.s
+
+src/pthread_detach.o: src/pthread_detach.c.o
+.PHONY : src/pthread_detach.o
+
+# target to build an object file
+src/pthread_detach.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_detach.dir/build.make CMakeFiles/pthread_detach.dir/src/pthread_detach.c.o
+.PHONY : src/pthread_detach.c.o
+
+src/pthread_detach.i: src/pthread_detach.c.i
+.PHONY : src/pthread_detach.i
+
+# target to preprocess a source file
+src/pthread_detach.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_detach.dir/build.make CMakeFiles/pthread_detach.dir/src/pthread_detach.c.i
+.PHONY : src/pthread_detach.c.i
+
+src/pthread_detach.s: src/pthread_detach.c.s
+.PHONY : src/pthread_detach.s
+
+# target to generate assembly for a file
+src/pthread_detach.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_detach.dir/build.make CMakeFiles/pthread_detach.dir/src/pthread_detach.c.s
+.PHONY : src/pthread_detach.c.s
+
+src/pthread_retval.o: src/pthread_retval.c.o
+.PHONY : src/pthread_retval.o
+
+# target to build an object file
+src/pthread_retval.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_retval.dir/build.make CMakeFiles/pthread_retval.dir/src/pthread_retval.c.o
+.PHONY : src/pthread_retval.c.o
+
+src/pthread_retval.i: src/pthread_retval.c.i
+.PHONY : src/pthread_retval.i
+
+# target to preprocess a source file
+src/pthread_retval.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_retval.dir/build.make CMakeFiles/pthread_retval.dir/src/pthread_retval.c.i
+.PHONY : src/pthread_retval.c.i
+
+src/pthread_retval.s: src/pthread_retval.c.s
+.PHONY : src/pthread_retval.s
+
+# target to generate assembly for a file
+src/pthread_retval.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_retval.dir/build.make CMakeFiles/pthread_retval.dir/src/pthread_retval.c.s
+.PHONY : src/pthread_retval.c.s
+
+src/pthread_struct.o: src/pthread_struct.c.o
+.PHONY : src/pthread_struct.o
+
+# target to build an object file
+src/pthread_struct.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct.dir/build.make CMakeFiles/pthread_struct.dir/src/pthread_struct.c.o
+.PHONY : src/pthread_struct.c.o
+
+src/pthread_struct.i: src/pthread_struct.c.i
+.PHONY : src/pthread_struct.i
+
+# target to preprocess a source file
+src/pthread_struct.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct.dir/build.make CMakeFiles/pthread_struct.dir/src/pthread_struct.c.i
+.PHONY : src/pthread_struct.c.i
+
+src/pthread_struct.s: src/pthread_struct.c.s
+.PHONY : src/pthread_struct.s
+
+# target to generate assembly for a file
+src/pthread_struct.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct.dir/build.make CMakeFiles/pthread_struct.dir/src/pthread_struct.c.s
+.PHONY : src/pthread_struct.c.s
+
+src/pthread_struct_detach.o: src/pthread_struct_detach.c.o
+.PHONY : src/pthread_struct_detach.o
+
+# target to build an object file
+src/pthread_struct_detach.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct_detach.dir/build.make CMakeFiles/pthread_struct_detach.dir/src/pthread_struct_detach.c.o
+.PHONY : src/pthread_struct_detach.c.o
+
+src/pthread_struct_detach.i: src/pthread_struct_detach.c.i
+.PHONY : src/pthread_struct_detach.i
+
+# target to preprocess a source file
+src/pthread_struct_detach.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct_detach.dir/build.make CMakeFiles/pthread_struct_detach.dir/src/pthread_struct_detach.c.i
+.PHONY : src/pthread_struct_detach.c.i
+
+src/pthread_struct_detach.s: src/pthread_struct_detach.c.s
+.PHONY : src/pthread_struct_detach.s
+
+# target to generate assembly for a file
+src/pthread_struct_detach.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct_detach.dir/build.make CMakeFiles/pthread_struct_detach.dir/src/pthread_struct_detach.c.s
+.PHONY : src/pthread_struct_detach.c.s
 
 # Help Target
 help:
@@ -161,10 +309,26 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... my_thread"
-	@echo "... src/thread3.o"
-	@echo "... src/thread3.i"
-	@echo "... src/thread3.s"
+	@echo "... pthread_creation"
+	@echo "... pthread_detach"
+	@echo "... pthread_retval"
+	@echo "... pthread_struct"
+	@echo "... pthread_struct_detach"
+	@echo "... src/pthread_creation.o"
+	@echo "... src/pthread_creation.i"
+	@echo "... src/pthread_creation.s"
+	@echo "... src/pthread_detach.o"
+	@echo "... src/pthread_detach.i"
+	@echo "... src/pthread_detach.s"
+	@echo "... src/pthread_retval.o"
+	@echo "... src/pthread_retval.i"
+	@echo "... src/pthread_retval.s"
+	@echo "... src/pthread_struct.o"
+	@echo "... src/pthread_struct.i"
+	@echo "... src/pthread_struct.s"
+	@echo "... src/pthread_struct_detach.o"
+	@echo "... src/pthread_struct_detach.i"
+	@echo "... src/pthread_struct_detach.s"
 .PHONY : help
 
 

@@ -5,18 +5,30 @@ set(CMAKE_C_COMPILER clang)
 
 find_package(Threads REQUIRED)
 
-add_executable(my_thread src/thread3.c)
+set(SOURCES
+    pthread_creation
+    pthread_detach
+    pthread_retval
+    pthread_struct
+    pthread_struct_detach
+    )
 
-target_compile_options(my_thread PRIVATE
+set(COMPILE_OPTIONS
     -Wall
     -Wextra
     -pthread
     -fsanitize=address,undefined,leak
-    -fno-omit-frame-pointer
+    -fno-omit-frame-pointer    
 )
 
-target_link_options(my_thread PRIVATE
-    -fsanitize=address,undefined
+set(LINK_OPTIONS
+    -fsanitize=address,undefined,leak
 )
 
-target_link_libraries(my_thread ${CMAKE_THREAD_LIBS_INIT})
+foreach(source_file ${SOURCES})
+    add_executable(${source_file} src/${source_file}.c)
+
+    target_compile_options(${source_file} PRIVATE ${COMPILE_OPTIONS})
+    target_link_options(${source_file} PRIVATE ${LINK_OPTIONS})
+    target_link_libraries(${source_file} ${CMAKE_THREAD_LIBS_INIT})
+endforeach()
