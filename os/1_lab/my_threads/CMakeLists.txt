@@ -14,6 +14,7 @@ set(EXECUTABLES
     detached/pthread_detach
     detached/pthread_struct
     detached/pthread_struct_detach
+    signal/signal
 )
 
 set(COMPILE_OPTIONS
