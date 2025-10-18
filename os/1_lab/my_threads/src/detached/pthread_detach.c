@@ -7,7 +7,6 @@ void *my_thread(void *arg) {
   (void)arg;
 
   int err = pthread_detach(pthread_self());
-
   if (err != 0) {
     printf("Error in detaching thread because of %s!\n", strerror(err));
     return NULL;
@@ -20,10 +19,11 @@ void *my_thread(void *arg) {
 
 int main() {
   pthread_t tid;
+  int err;
   long counter = 0;
 
   while (1) {
-    int err = pthread_create(&tid, NULL, my_thread, NULL);
+    err = pthread_create(&tid, NULL, my_thread, NULL);
 
     if (err != 0) {
       printf("STOP WORKING BC OF %s\n", strerror(err));

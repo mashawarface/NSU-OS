@@ -130,19 +130,6 @@ pthread_creation/fast:
 .PHONY : pthread_creation/fast
 
 #=============================================================================
-# Target rules for targets named pthread_detach
-
-# Build rule for target.
-pthread_detach: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 pthread_detach
-.PHONY : pthread_detach
-
-# fast build rule for target.
-pthread_detach/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_detach.dir/build.make CMakeFiles/pthread_detach.dir/build
-.PHONY : pthread_detach/fast
-
-#=============================================================================
 # Target rules for targets named pthread_retval
 
 # Build rule for target.
@@ -154,6 +141,58 @@ pthread_retval: cmake_check_build_system
 pthread_retval/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_retval.dir/build.make CMakeFiles/pthread_retval.dir/build
 .PHONY : pthread_retval/fast
+
+#=============================================================================
+# Target rules for targets named cancel_printf
+
+# Build rule for target.
+cancel_printf: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 cancel_printf
+.PHONY : cancel_printf
+
+# fast build rule for target.
+cancel_printf/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cancel_printf.dir/build.make CMakeFiles/cancel_printf.dir/build
+.PHONY : cancel_printf/fast
+
+#=============================================================================
+# Target rules for targets named cancel
+
+# Build rule for target.
+cancel: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 cancel
+.PHONY : cancel
+
+# fast build rule for target.
+cancel/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cancel.dir/build.make CMakeFiles/cancel.dir/build
+.PHONY : cancel/fast
+
+#=============================================================================
+# Target rules for targets named cancel_malloc
+
+# Build rule for target.
+cancel_malloc: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 cancel_malloc
+.PHONY : cancel_malloc
+
+# fast build rule for target.
+cancel_malloc/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cancel_malloc.dir/build.make CMakeFiles/cancel_malloc.dir/build
+.PHONY : cancel_malloc/fast
+
+#=============================================================================
+# Target rules for targets named pthread_detach
+
+# Build rule for target.
+pthread_detach: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 pthread_detach
+.PHONY : pthread_detach
+
+# fast build rule for target.
+pthread_detach/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_detach.dir/build.make CMakeFiles/pthread_detach.dir/build
+.PHONY : pthread_detach/fast
 
 #=============================================================================
 # Target rules for targets named pthread_struct
@@ -181,125 +220,197 @@ pthread_struct_detach/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct_detach.dir/build.make CMakeFiles/pthread_struct_detach.dir/build
 .PHONY : pthread_struct_detach/fast
 
-src/pthread_creation.o: src/pthread_creation.c.o
-.PHONY : src/pthread_creation.o
+src/basic/pthread_creation.o: src/basic/pthread_creation.c.o
+.PHONY : src/basic/pthread_creation.o
 
 # target to build an object file
-src/pthread_creation.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_creation.dir/build.make CMakeFiles/pthread_creation.dir/src/pthread_creation.c.o
-.PHONY : src/pthread_creation.c.o
+src/basic/pthread_creation.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_creation.dir/build.make CMakeFiles/pthread_creation.dir/src/basic/pthread_creation.c.o
+.PHONY : src/basic/pthread_creation.c.o
 
-src/pthread_creation.i: src/pthread_creation.c.i
-.PHONY : src/pthread_creation.i
+src/basic/pthread_creation.i: src/basic/pthread_creation.c.i
+.PHONY : src/basic/pthread_creation.i
 
 # target to preprocess a source file
-src/pthread_creation.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_creation.dir/build.make CMakeFiles/pthread_creation.dir/src/pthread_creation.c.i
-.PHONY : src/pthread_creation.c.i
+src/basic/pthread_creation.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_creation.dir/build.make CMakeFiles/pthread_creation.dir/src/basic/pthread_creation.c.i
+.PHONY : src/basic/pthread_creation.c.i
 
-src/pthread_creation.s: src/pthread_creation.c.s
-.PHONY : src/pthread_creation.s
+src/basic/pthread_creation.s: src/basic/pthread_creation.c.s
+.PHONY : src/basic/pthread_creation.s
 
 # target to generate assembly for a file
-src/pthread_creation.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_creation.dir/build.make CMakeFiles/pthread_creation.dir/src/pthread_creation.c.s
-.PHONY : src/pthread_creation.c.s
+src/basic/pthread_creation.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_creation.dir/build.make CMakeFiles/pthread_creation.dir/src/basic/pthread_creation.c.s
+.PHONY : src/basic/pthread_creation.c.s
 
-src/pthread_detach.o: src/pthread_detach.c.o
-.PHONY : src/pthread_detach.o
+src/basic/pthread_retval.o: src/basic/pthread_retval.c.o
+.PHONY : src/basic/pthread_retval.o
 
 # target to build an object file
-src/pthread_detach.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_detach.dir/build.make CMakeFiles/pthread_detach.dir/src/pthread_detach.c.o
-.PHONY : src/pthread_detach.c.o
+src/basic/pthread_retval.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_retval.dir/build.make CMakeFiles/pthread_retval.dir/src/basic/pthread_retval.c.o
+.PHONY : src/basic/pthread_retval.c.o
 
-src/pthread_detach.i: src/pthread_detach.c.i
-.PHONY : src/pthread_detach.i
+src/basic/pthread_retval.i: src/basic/pthread_retval.c.i
+.PHONY : src/basic/pthread_retval.i
 
 # target to preprocess a source file
-src/pthread_detach.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_detach.dir/build.make CMakeFiles/pthread_detach.dir/src/pthread_detach.c.i
-.PHONY : src/pthread_detach.c.i
+src/basic/pthread_retval.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_retval.dir/build.make CMakeFiles/pthread_retval.dir/src/basic/pthread_retval.c.i
+.PHONY : src/basic/pthread_retval.c.i
 
-src/pthread_detach.s: src/pthread_detach.c.s
-.PHONY : src/pthread_detach.s
+src/basic/pthread_retval.s: src/basic/pthread_retval.c.s
+.PHONY : src/basic/pthread_retval.s
 
 # target to generate assembly for a file
-src/pthread_detach.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_detach.dir/build.make CMakeFiles/pthread_detach.dir/src/pthread_detach.c.s
-.PHONY : src/pthread_detach.c.s
+src/basic/pthread_retval.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_retval.dir/build.make CMakeFiles/pthread_retval.dir/src/basic/pthread_retval.c.s
+.PHONY : src/basic/pthread_retval.c.s
 
-src/pthread_retval.o: src/pthread_retval.c.o
-.PHONY : src/pthread_retval.o
+src/cancel/cancel.o: src/cancel/cancel.c.o
+.PHONY : src/cancel/cancel.o
 
 # target to build an object file
-src/pthread_retval.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_retval.dir/build.make CMakeFiles/pthread_retval.dir/src/pthread_retval.c.o
-.PHONY : src/pthread_retval.c.o
+src/cancel/cancel.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cancel.dir/build.make CMakeFiles/cancel.dir/src/cancel/cancel.c.o
+.PHONY : src/cancel/cancel.c.o
 
-src/pthread_retval.i: src/pthread_retval.c.i
-.PHONY : src/pthread_retval.i
+src/cancel/cancel.i: src/cancel/cancel.c.i
+.PHONY : src/cancel/cancel.i
 
 # target to preprocess a source file
-src/pthread_retval.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_retval.dir/build.make CMakeFiles/pthread_retval.dir/src/pthread_retval.c.i
-.PHONY : src/pthread_retval.c.i
+src/cancel/cancel.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cancel.dir/build.make CMakeFiles/cancel.dir/src/cancel/cancel.c.i
+.PHONY : src/cancel/cancel.c.i
 
-src/pthread_retval.s: src/pthread_retval.c.s
-.PHONY : src/pthread_retval.s
+src/cancel/cancel.s: src/cancel/cancel.c.s
+.PHONY : src/cancel/cancel.s
 
 # target to generate assembly for a file
-src/pthread_retval.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_retval.dir/build.make CMakeFiles/pthread_retval.dir/src/pthread_retval.c.s
-.PHONY : src/pthread_retval.c.s
+src/cancel/cancel.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cancel.dir/build.make CMakeFiles/cancel.dir/src/cancel/cancel.c.s
+.PHONY : src/cancel/cancel.c.s
 
-src/pthread_struct.o: src/pthread_struct.c.o
-.PHONY : src/pthread_struct.o
+src/cancel/cancel_malloc.o: src/cancel/cancel_malloc.c.o
+.PHONY : src/cancel/cancel_malloc.o
 
 # target to build an object file
-src/pthread_struct.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct.dir/build.make CMakeFiles/pthread_struct.dir/src/pthread_struct.c.o
-.PHONY : src/pthread_struct.c.o
+src/cancel/cancel_malloc.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cancel_malloc.dir/build.make CMakeFiles/cancel_malloc.dir/src/cancel/cancel_malloc.c.o
+.PHONY : src/cancel/cancel_malloc.c.o
 
-src/pthread_struct.i: src/pthread_struct.c.i
-.PHONY : src/pthread_struct.i
+src/cancel/cancel_malloc.i: src/cancel/cancel_malloc.c.i
+.PHONY : src/cancel/cancel_malloc.i
 
 # target to preprocess a source file
-src/pthread_struct.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct.dir/build.make CMakeFiles/pthread_struct.dir/src/pthread_struct.c.i
-.PHONY : src/pthread_struct.c.i
+src/cancel/cancel_malloc.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cancel_malloc.dir/build.make CMakeFiles/cancel_malloc.dir/src/cancel/cancel_malloc.c.i
+.PHONY : src/cancel/cancel_malloc.c.i
 
-src/pthread_struct.s: src/pthread_struct.c.s
-.PHONY : src/pthread_struct.s
+src/cancel/cancel_malloc.s: src/cancel/cancel_malloc.c.s
+.PHONY : src/cancel/cancel_malloc.s
 
 # target to generate assembly for a file
-src/pthread_struct.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct.dir/build.make CMakeFiles/pthread_struct.dir/src/pthread_struct.c.s
-.PHONY : src/pthread_struct.c.s
+src/cancel/cancel_malloc.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cancel_malloc.dir/build.make CMakeFiles/cancel_malloc.dir/src/cancel/cancel_malloc.c.s
+.PHONY : src/cancel/cancel_malloc.c.s
 
-src/pthread_struct_detach.o: src/pthread_struct_detach.c.o
-.PHONY : src/pthread_struct_detach.o
+src/cancel/cancel_printf.o: src/cancel/cancel_printf.c.o
+.PHONY : src/cancel/cancel_printf.o
 
 # target to build an object file
-src/pthread_struct_detach.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct_detach.dir/build.make CMakeFiles/pthread_struct_detach.dir/src/pthread_struct_detach.c.o
-.PHONY : src/pthread_struct_detach.c.o
+src/cancel/cancel_printf.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cancel_printf.dir/build.make CMakeFiles/cancel_printf.dir/src/cancel/cancel_printf.c.o
+.PHONY : src/cancel/cancel_printf.c.o
 
-src/pthread_struct_detach.i: src/pthread_struct_detach.c.i
-.PHONY : src/pthread_struct_detach.i
+src/cancel/cancel_printf.i: src/cancel/cancel_printf.c.i
+.PHONY : src/cancel/cancel_printf.i
 
 # target to preprocess a source file
-src/pthread_struct_detach.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct_detach.dir/build.make CMakeFiles/pthread_struct_detach.dir/src/pthread_struct_detach.c.i
-.PHONY : src/pthread_struct_detach.c.i
+src/cancel/cancel_printf.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cancel_printf.dir/build.make CMakeFiles/cancel_printf.dir/src/cancel/cancel_printf.c.i
+.PHONY : src/cancel/cancel_printf.c.i
 
-src/pthread_struct_detach.s: src/pthread_struct_detach.c.s
-.PHONY : src/pthread_struct_detach.s
+src/cancel/cancel_printf.s: src/cancel/cancel_printf.c.s
+.PHONY : src/cancel/cancel_printf.s
 
 # target to generate assembly for a file
-src/pthread_struct_detach.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct_detach.dir/build.make CMakeFiles/pthread_struct_detach.dir/src/pthread_struct_detach.c.s
-.PHONY : src/pthread_struct_detach.c.s
+src/cancel/cancel_printf.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cancel_printf.dir/build.make CMakeFiles/cancel_printf.dir/src/cancel/cancel_printf.c.s
+.PHONY : src/cancel/cancel_printf.c.s
+
+src/detached/pthread_detach.o: src/detached/pthread_detach.c.o
+.PHONY : src/detached/pthread_detach.o
+
+# target to build an object file
+src/detached/pthread_detach.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_detach.dir/build.make CMakeFiles/pthread_detach.dir/src/detached/pthread_detach.c.o
+.PHONY : src/detached/pthread_detach.c.o
+
+src/detached/pthread_detach.i: src/detached/pthread_detach.c.i
+.PHONY : src/detached/pthread_detach.i
+
+# target to preprocess a source file
+src/detached/pthread_detach.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_detach.dir/build.make CMakeFiles/pthread_detach.dir/src/detached/pthread_detach.c.i
+.PHONY : src/detached/pthread_detach.c.i
+
+src/detached/pthread_detach.s: src/detached/pthread_detach.c.s
+.PHONY : src/detached/pthread_detach.s
+
+# target to generate assembly for a file
+src/detached/pthread_detach.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_detach.dir/build.make CMakeFiles/pthread_detach.dir/src/detached/pthread_detach.c.s
+.PHONY : src/detached/pthread_detach.c.s
+
+src/detached/pthread_struct.o: src/detached/pthread_struct.c.o
+.PHONY : src/detached/pthread_struct.o
+
+# target to build an object file
+src/detached/pthread_struct.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct.dir/build.make CMakeFiles/pthread_struct.dir/src/detached/pthread_struct.c.o
+.PHONY : src/detached/pthread_struct.c.o
+
+src/detached/pthread_struct.i: src/detached/pthread_struct.c.i
+.PHONY : src/detached/pthread_struct.i
+
+# target to preprocess a source file
+src/detached/pthread_struct.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct.dir/build.make CMakeFiles/pthread_struct.dir/src/detached/pthread_struct.c.i
+.PHONY : src/detached/pthread_struct.c.i
+
+src/detached/pthread_struct.s: src/detached/pthread_struct.c.s
+.PHONY : src/detached/pthread_struct.s
+
+# target to generate assembly for a file
+src/detached/pthread_struct.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct.dir/build.make CMakeFiles/pthread_struct.dir/src/detached/pthread_struct.c.s
+.PHONY : src/detached/pthread_struct.c.s
+
+src/detached/pthread_struct_detach.o: src/detached/pthread_struct_detach.c.o
+.PHONY : src/detached/pthread_struct_detach.o
+
+# target to build an object file
+src/detached/pthread_struct_detach.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct_detach.dir/build.make CMakeFiles/pthread_struct_detach.dir/src/detached/pthread_struct_detach.c.o
+.PHONY : src/detached/pthread_struct_detach.c.o
+
+src/detached/pthread_struct_detach.i: src/detached/pthread_struct_detach.c.i
+.PHONY : src/detached/pthread_struct_detach.i
+
+# target to preprocess a source file
+src/detached/pthread_struct_detach.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct_detach.dir/build.make CMakeFiles/pthread_struct_detach.dir/src/detached/pthread_struct_detach.c.i
+.PHONY : src/detached/pthread_struct_detach.c.i
+
+src/detached/pthread_struct_detach.s: src/detached/pthread_struct_detach.c.s
+.PHONY : src/detached/pthread_struct_detach.s
+
+# target to generate assembly for a file
+src/detached/pthread_struct_detach.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pthread_struct_detach.dir/build.make CMakeFiles/pthread_struct_detach.dir/src/detached/pthread_struct_detach.c.s
+.PHONY : src/detached/pthread_struct_detach.c.s
 
 # Help Target
 help:
@@ -309,26 +420,38 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... cancel"
+	@echo "... cancel_malloc"
+	@echo "... cancel_printf"
 	@echo "... pthread_creation"
 	@echo "... pthread_detach"
 	@echo "... pthread_retval"
 	@echo "... pthread_struct"
 	@echo "... pthread_struct_detach"
-	@echo "... src/pthread_creation.o"
-	@echo "... src/pthread_creation.i"
-	@echo "... src/pthread_creation.s"
-	@echo "... src/pthread_detach.o"
-	@echo "... src/pthread_detach.i"
-	@echo "... src/pthread_detach.s"
-	@echo "... src/pthread_retval.o"
-	@echo "... src/pthread_retval.i"
-	@echo "... src/pthread_retval.s"
-	@echo "... src/pthread_struct.o"
-	@echo "... src/pthread_struct.i"
-	@echo "... src/pthread_struct.s"
-	@echo "... src/pthread_struct_detach.o"
-	@echo "... src/pthread_struct_detach.i"
-	@echo "... src/pthread_struct_detach.s"
+	@echo "... src/basic/pthread_creation.o"
+	@echo "... src/basic/pthread_creation.i"
+	@echo "... src/basic/pthread_creation.s"
+	@echo "... src/basic/pthread_retval.o"
+	@echo "... src/basic/pthread_retval.i"
+	@echo "... src/basic/pthread_retval.s"
+	@echo "... src/cancel/cancel.o"
+	@echo "... src/cancel/cancel.i"
+	@echo "... src/cancel/cancel.s"
+	@echo "... src/cancel/cancel_malloc.o"
+	@echo "... src/cancel/cancel_malloc.i"
+	@echo "... src/cancel/cancel_malloc.s"
+	@echo "... src/cancel/cancel_printf.o"
+	@echo "... src/cancel/cancel_printf.i"
+	@echo "... src/cancel/cancel_printf.s"
+	@echo "... src/detached/pthread_detach.o"
+	@echo "... src/detached/pthread_detach.i"
+	@echo "... src/detached/pthread_detach.s"
+	@echo "... src/detached/pthread_struct.o"
+	@echo "... src/detached/pthread_struct.i"
+	@echo "... src/detached/pthread_struct.s"
+	@echo "... src/detached/pthread_struct_detach.o"
+	@echo "... src/detached/pthread_struct_detach.i"
+	@echo "... src/detached/pthread_struct_detach.s"
 .PHONY : help
 
 

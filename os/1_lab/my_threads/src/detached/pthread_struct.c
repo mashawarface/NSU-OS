@@ -9,8 +9,9 @@ typedef struct {
 } my_struct;
 
 void *my_thread(void *arg) {
-  int err = pthread_detach(pthread_self());
+  (void)arg;
 
+  int err = pthread_detach(pthread_self());
   if (err != 0) {
     printf("Error in detaching thread because of %s!\n", strerror(err));
     return NULL;
@@ -25,21 +26,20 @@ void *my_thread(void *arg) {
 
 int main() {
   pthread_t tid;
+  int err;
 
   my_struct m;
 
   m.a = 1;
   m.b = "a";
 
-  int err = pthread_create(&tid, NULL, my_thread, &m);
-
+  err = pthread_create(&tid, NULL, my_thread, &m);
   if (err != 0) {
     printf("Error in creating thread because of %s!\n", strerror(err));
     return -1;
   }
 
   err = pthread_join(tid, NULL);
-
   if (err != 0) {
     printf("Can`t join thread because of %s\n", strerror(err));
     return -1;

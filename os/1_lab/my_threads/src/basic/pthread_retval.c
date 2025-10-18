@@ -1,8 +1,8 @@
 #define _GNU_SOURCE
 
-#include <string.h>
 #include <pthread.h>
 #include <stdio.h>
+#include <string.h>
 
 void *my_thread(void *arg) {
   (void)arg;
@@ -13,18 +13,17 @@ void *my_thread(void *arg) {
 
 int main() {
   pthread_t tid;
+  int err;
   int val;
   // char *val;
 
-  int err = pthread_create(&tid, NULL, my_thread, NULL);
-
+  err = pthread_create(&tid, NULL, my_thread, NULL);
   if (err != 0) {
     printf("Error in creating thread because of %s!\n", strerror(err));
     return -1;
   }
 
   err = pthread_join(tid, (void **)&val);
-
   if (err != 0) {
     printf("Can`t join thread because of %s!\n", strerror(err));
     return -1;

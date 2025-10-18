@@ -5,30 +5,36 @@ set(CMAKE_C_COMPILER clang)
 
 find_package(Threads REQUIRED)
 
-set(SOURCES
-    pthread_creation
-    pthread_detach
-    pthread_retval
-    pthread_struct
-    pthread_struct_detach
-    )
+set(EXECUTABLES
+    basic/pthread_creation
+    basic/pthread_retval
+    cancel/cancel_printf
+    cancel/cancel
+    cancel/cancel_malloc
+    detached/pthread_detach
+    detached/pthread_struct
+    detached/pthread_struct_detach
+)
 
 set(COMPILE_OPTIONS
     -Wall
     -Wextra
     -pthread
     -fsanitize=address,undefined,leak
-    -fno-omit-frame-pointer    
+    -fno-omit-frame-pointer
 )
 
 set(LINK_OPTIONS
     -fsanitize=address,undefined,leak
 )
 
-foreach(source_file ${SOURCES})
-    add_executable(${source_file} src/${source_file}.c)
+foreach(exec ${EXECUTABLES})
+    get_filename_component(target_name ${exec} NAME_WE)
+    set(source_file src/${exec}.c)
 
-    target_compile_options(${source_file} PRIVATE ${COMPILE_OPTIONS})
-    target_link_options(${source_file} PRIVATE ${LINK_OPTIONS})
-    target_link_libraries(${source_file} ${CMAKE_THREAD_LIBS_INIT})
+    add_executable(${target_name} ${source_file})
+
+    target_compile_options(${target_name} PRIVATE ${COMPILE_OPTIONS})
+    target_link_options(${target_name} PRIVATE ${LINK_OPTIONS})
+    target_link_libraries(${target_name} PRIVATE Threads::Threads)
 endforeach()

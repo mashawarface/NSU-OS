@@ -31,10 +31,10 @@ void *my_thread(void *arg) {
 
 int main() {
   pthread_t tids[5];
+  int err;
 
   for (int i = 0; i < 5; i++) {
-    int err = pthread_create(&tids[i], NULL, my_thread, NULL);
-
+    err = pthread_create(&tids[i], NULL, my_thread, NULL);
     if (err != 0) {
       printf("error in creating thread #%d because of %s!\n", i, strerror(err));
       return -1;
@@ -42,8 +42,7 @@ int main() {
   }
 
   for (int i = 0; i < 5; i++) {
-    int err = pthread_join(tids[i], NULL);
-
+    err = pthread_join(tids[i], NULL);
     if (err != 0) {
       printf("Can`t join thread #%d because of %s!\n", i, strerror(err));
       return -1;
