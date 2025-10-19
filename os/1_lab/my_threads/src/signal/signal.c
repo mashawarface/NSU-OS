@@ -5,17 +5,35 @@
 #include <string.h>
 #include <unistd.h>
 
+#define THREAD_COUNT 3
+
 void signal_handler(int sig) {
-  char *message = "\nReceived signal!\n";
+  (void)sig;
+  char *message = "\nReceived SIGINT!\n";
   write(1, message, strlen(message));
 }
 
 void *thread_ignore_all(void *arg) {
   (void)arg;
+  int err;
+
+  sigset_t mask;
+
+  err = sigfillset(&mask);
+  if (err != 0) {
+    printf("Error in sigfillset because of %s!\n", strerror(err));
+    return NULL;
+  }
+
+  pthread_sigmask(SIG_SETMASK, &mask, NULL);
+  if (err != 0) {
+    printf("Error in setting sig mask because of %s!\n", strerror(err));
+    return NULL;
+  }
 
   while (1) {
-    printf("Working: pid = %d\n", getpid());
-    sleep(3);
+    pause();
+    printf("Continue thread #1 after receiving signal...\n");
   }
 
   return NULL;
@@ -23,12 +41,42 @@ void *thread_ignore_all(void *arg) {
 
 void *thread_sigint(void *arg) {
   (void)arg;
+  int err;
 
-  signal(SIGINT, signal_handler);
+  sigset_t mask;
+
+  err = sigaddset(&mask, SIGINT);
+
+  if (err != 0) {
+    printf("Error in sigaddset because of %s!\n", strerror(err));
+    return NULL;
+  }
+
+  pthread_sigmask(SIG_UNBLOCK, &mask, NULL);
+  if (err != 0) {
+    printf("Error in setting sig mask because of %s!\n", strerror(err));
+    return NULL;
+  }
+
+  struct sigaction act;
+  act.sa_handler = signal_handler;
+  act.sa_flags = SA_RESTART;
+
+  err = sigemptyset(&act.sa_mask);
+  if (err != 0) {
+    printf("Error in sigemptyset because of %s!\n", strerror(err));
+    return NULL;
+  }
+
+  err = sigaction(SIGINT, &act, NULL);
+  if (err != 0) {
+    printf("Error in sigaction because of %s!\n", strerror(err));
+    return NULL;
+  }
 
   while (1) {
-    printf("Working: pid = %d\n", getpid());
-    sleep(3);
+    pause();
+    printf("Continue thread #2 after receiving SIGINT...\n");
   }
 
   return NULL;
@@ -36,23 +84,69 @@ void *thread_sigint(void *arg) {
 
 void *thread_sigquit(void *arg) {
   (void)arg;
+  int err, sig;
+
+  sigset_t mask;
+
+  err = sigaddset(&mask, SIGQUIT);
+  if (err != 0) {
+    printf("Error in sigaddset because of %s!\n", strerror(err));
+    return NULL;
+  }
+
+  pthread_sigmask(SIG_UNBLOCK, &mask, NULL);
+  if (err != 0) {
+    printf("Error in setting sig mask because of %s!\n", strerror(err));
+    return NULL;
+  }
 
   while (1) {
-    printf("Working: pid = %d\n", getpid());
-    sleep(3);
+    err = sigwait(&mask, &sig);
+
+    if (err != 0) {
+      printf("Error in sigwait beacuse of %s!\n", strerror(err));
+      return NULL;
+    }
+
+    printf("Continue thread #3 after receiving SIGQUIT...\n");
   }
 
   return NULL;
 }
 
-#define THREAD_COUNT 3
-
 int main() {
   pthread_t tids[THREAD_COUNT];
   int err;
 
-struct sigaction act;
-act.sa_flags = 
+  // start setting mask
+  sigset_t main_mask;
+
+  err = sigemptyset(&main_mask);
+  if (err != 0) {
+    printf("Error in sigemptyset because of %s!\n", strerror(err));
+    return 1;
+  }
+
+  err = sigaddset(&main_mask, SIGINT);
+  if (err != 0) {
+    printf("Error in sigaddset because of %s!\n", strerror(err));
+    return 1;
+  }
+
+  err = sigaddset(&main_mask, SIGQUIT);
+  if (err != 0) {
+    printf("Error in sigaddset because of %s!\n", strerror(err));
+    return 1;
+  }
+
+  err = pthread_sigmask(SIG_BLOCK, &main_mask, NULL);
+  if (err != 0) {
+    printf("Error in setting sig mask because of %s!\n", strerror(err));
+    return 1;
+  }
+  // end setting mask
+
+  printf("PID: %d\n", getpid());
 
   err = pthread_create(&tids[0], NULL, thread_ignore_all, NULL);
   if (err != 0) {
