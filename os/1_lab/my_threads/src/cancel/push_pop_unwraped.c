@@ -25,8 +25,8 @@ void *my_thread(void *arg) {
   //   pthread_cleanup_push(cleanup_handler, string);
 
   do {
-    __pthread_unwind_buf_t __cancel_buf;
-    void (*__cancel_routine)(void *) = (cleanup_handler);
+    __pthread_unwind_buf_t __cancel_buf;                                                    // create buffer
+    void (*__cancel_routine)(void *) = (cleanup_handler);                                   // parse arguments
     void *__cancel_arg = (string);
     int __not_first_call = __sigsetjmp(
         (struct __jmp_buf_tag *)(void *)(__cancel_buf.__cancel_jmp_buf), (0));

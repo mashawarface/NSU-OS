@@ -7,19 +7,20 @@ int counter = 0;
 
 void *my_thread(void *arg) {
   (void)arg;
-  //   int err;
+  int err;
 
-  //   err = pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+  err = pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
 
-  //   if (err != 0) {
-  //     printf("Error in setting cancel type thread because of %s!\n",
-  //            strerror(err));
-  //     return NULL;
-  //   }
+  err = pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+  if (err != 0) {
+    printf("Error in setting cancel type thread because of %s!\n",
+           strerror(err));
+    return NULL;
+  }
 
   while (1) {
     counter += 1;
-    pthread_testcancel();
+    // pthread_testcancel();
   }
 }
 

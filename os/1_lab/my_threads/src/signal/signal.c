@@ -9,13 +9,18 @@
 
 void signal_handler(int sig) {
   (void)sig;
-  char *message = "\nReceived SIGINT!\n";
-  write(1, message, strlen(message));
+  // char *message = "\nReceived SIGINT!\n";
+  // write(1, message, strlen(message));
+  printf("This signal accepted by %lu thread! Continue working after "
+         "receiving signal %s!\n",
+         pthread_self(), strsignal(sig));
 }
 
 void *thread_ignore_all(void *arg) {
   (void)arg;
   int err;
+
+  printf("Thread, that is ignored all signal: %lu\n", pthread_self());
 
   sigset_t mask;
 
@@ -25,7 +30,7 @@ void *thread_ignore_all(void *arg) {
     return NULL;
   }
 
-  pthread_sigmask(SIG_SETMASK, &mask, NULL);
+  pthread_sigmask(SIG_BLOCK, &mask, NULL);
   if (err != 0) {
     printf("Error in setting sig mask because of %s!\n", strerror(err));
     return NULL;
@@ -33,7 +38,9 @@ void *thread_ignore_all(void *arg) {
 
   while (1) {
     pause();
-    printf("Continue thread #1 after receiving signal...\n");
+    printf("This signal accepted by %lu thread! Continue working after "
+           "receiving signal!\n",
+           pthread_self());
   }
 
   return NULL;
@@ -43,10 +50,11 @@ void *thread_sigint(void *arg) {
   (void)arg;
   int err;
 
+  printf("Thread, that is accepted sigint: %lu\n", pthread_self());
+
   sigset_t mask;
 
   err = sigaddset(&mask, SIGINT);
-
   if (err != 0) {
     printf("Error in sigaddset because of %s!\n", strerror(err));
     return NULL;
@@ -76,7 +84,6 @@ void *thread_sigint(void *arg) {
 
   while (1) {
     pause();
-    printf("Continue thread #2 after receiving SIGINT...\n");
   }
 
   return NULL;
@@ -85,6 +92,8 @@ void *thread_sigint(void *arg) {
 void *thread_sigquit(void *arg) {
   (void)arg;
   int err, sig;
+
+  printf("Thread, that is accepted sigquit: %lu\n", pthread_self());
 
   sigset_t mask;
 
@@ -108,7 +117,9 @@ void *thread_sigquit(void *arg) {
       return NULL;
     }
 
-    printf("Continue thread #3 after receiving SIGQUIT...\n");
+    printf("This signal accepted by %lu thread! Continue working after "
+           "receiving signal %s!\n",
+           pthread_self(), strsignal(sig));
   }
 
   return NULL;
@@ -121,21 +132,9 @@ int main() {
   // start setting mask
   sigset_t main_mask;
 
-  err = sigemptyset(&main_mask);
+  err = sigfillset(&main_mask);
   if (err != 0) {
     printf("Error in sigemptyset because of %s!\n", strerror(err));
-    return 1;
-  }
-
-  err = sigaddset(&main_mask, SIGINT);
-  if (err != 0) {
-    printf("Error in sigaddset because of %s!\n", strerror(err));
-    return 1;
-  }
-
-  err = sigaddset(&main_mask, SIGQUIT);
-  if (err != 0) {
-    printf("Error in sigaddset because of %s!\n", strerror(err));
     return 1;
   }
 

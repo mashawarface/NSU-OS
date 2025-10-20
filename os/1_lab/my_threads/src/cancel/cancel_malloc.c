@@ -8,6 +8,7 @@ void cleanup_handler(void *arg) {
   if (arg != NULL) {
     free(arg);
     arg = NULL;
+    printf("HANDLER HAS EXECUTED!\n");
   }
 }
 
@@ -28,6 +29,9 @@ void *my_thread(void *arg) {
     printf("%s\n", string);
   }
 
+  /*When a thread is canceled, all of the stacked clean-up handlers are popped
+     and executed in the reverse of the order in which they were pushed onto the
+     stack.*/
   pthread_cleanup_pop(0);
 
   return NULL;
