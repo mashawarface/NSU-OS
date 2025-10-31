@@ -90,7 +90,7 @@ int mythread_join(mythread_t thread, void **retval) {
 
   futex((void *)&thread->joined, FUTEX_WAKE, 1, NULL, NULL, 0);
 
-  // destroy_thread(thread);
+  destroy_thread(thread);
 
   return 0;
 }

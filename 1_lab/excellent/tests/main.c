@@ -9,8 +9,9 @@ void *my_routine(void *args) {
 
   char *msg = "hello";
 
-  for (size_t i = 0; i < 2; i++) {
+  for (size_t i = 0; i < 2; ++i) {
     puts(msg);
+    fflush(stdout);
     // sleep(1);
   }
 
@@ -49,8 +50,6 @@ int main(void) {
     printf("Error in joining a thread, because of %s!\n", strerror(err));
     return 1;
   }
-
-  // sleep(1000);
 
   return 0;
 }
