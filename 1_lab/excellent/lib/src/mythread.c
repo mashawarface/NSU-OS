@@ -57,7 +57,7 @@ int mythread_startup(void *arg) {
   thread->retval = thread->start_routine(thread->args);
   thread->finished = 1;
 
-  futex((unsigned long int *)&thread->finished, FUTEX_WAKE, 0, NULL, NULL, 0);
+  futex((unsigned long int *)&thread->finished, FUTEX_WAKE, 1, NULL, NULL, 0);
 
   while (!thread->joined && !thread->detached) {
     futex((void *)&thread->joined, FUTEX_WAIT, 0, NULL, NULL, 0);
@@ -86,7 +86,7 @@ int mythread_join(mythread_t thread, void **retval) {
 
   thread->joined = 1;
 
-  futex((void *)&thread->joined, FUTEX_WAKE, 0, NULL, NULL, 0);
+  futex((void *)&thread->joined, FUTEX_WAKE, 1, NULL, NULL, 0);
 
   destroy_thread(thread);
 
@@ -104,7 +104,7 @@ int mythread_detach(mythread_t thread) {
 
   thread->detached = 1;
 
-  futex((void *)&thread->detached, FUTEX_WAKE, 0, NULL, NULL, 0);
+  futex((void *)&thread->detached, FUTEX_WAKE, 1, NULL, NULL, 0);
 
   return 0;
 }
