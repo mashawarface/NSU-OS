@@ -35,6 +35,8 @@ void *create_stack(size_t size) {
     return NULL;
   }
 
+  memset(stack, 0x0, size);
+
   if (mprotect(stack, PAGE, PROT_NONE) == -1) {
     munmap(stack, size);
     return NULL;
@@ -88,7 +90,7 @@ int mythread_join(mythread_t thread, void **retval) {
 
   futex((void *)&thread->joined, FUTEX_WAKE, 1, NULL, NULL, 0);
 
-  destroy_thread(thread);
+  // destroy_thread(thread);
 
   return 0;
 }
@@ -111,7 +113,7 @@ int mythread_detach(mythread_t thread) {
 
 int mythread_create(mythread_t *tid, void *(*routine)(void *), void *args) {
   mythread_struct_t *thread;
-  void *stack;
+  void *stack, *stack_top;
 
   stack = create_stack(STACK_SIZE);
   if (!stack) {
@@ -130,9 +132,9 @@ int mythread_create(mythread_t *tid, void *(*routine)(void *), void *args) {
   thread->detached = 0;
   thread->finished = 0;
 
-  stack = (void *)thread;
+  stack_top = (void *)thread;
 
-  int child_pid = clone(mythread_startup, stack,
+  int child_pid = clone(mythread_startup, stack_top,
                         CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
                             CLONE_THREAD | CLONE_SYSVSEM,
                         (void *)thread);
