@@ -1,5 +1,7 @@
+#include <stddef.h>
 #define PAGE 4096
 #define STACK_SIZE PAGE * 8
+#define MAX_DETACHED_THREADS 1000
 
 #define mythread_cleanup_push(routine, arg)
 #define mythread_cleanup_pop(execute)
@@ -21,7 +23,13 @@ typedef struct mythread {
 typedef mythread_struct_t *mythread_t;
 
 typedef struct mythread_cleanup_buffer {
-} mythread_cleanup_buffer;
+} mythread_cleanup_buffer_t;
+
+typedef struct detached_threads_buffer {
+  size_t counter;
+  size_t capasity;
+  mythread_struct_t *detached_threads_list;
+} detached_threads_buffer_t;
 
 int mythread_create(mythread_t *thread, void *(*routine)(void *), void *args);
 

@@ -1,3 +1,4 @@
+#include <stddef.h>
 #define _GNU_SOURCE
 
 #include <asm-generic/errno-base.h>
@@ -26,6 +27,40 @@ static int futex(void *addr, int op, int val, const struct timespec *timeout,
   return syscall(SYS_futex, addr, op, val, timeout, addr2, val2);
 }
 
+detached_threads_buffer_t *buffer;
+
+int destroy_thread(mythread_t thread) {
+  if (munmap(thread->stack, thread->stack_size) == -1) {
+    return errno;
+  }
+
+  return 0;
+}
+
+int detached_cleanup() {
+  if (buffer == NULL) {
+    return 0;
+  }
+
+  for (size_t i = 0; i < buffer->counter; i++) {
+    mythread_t thread = &buffer->detached_threads_list[i];
+    int err = destroy_thread(thread);
+    if (err != 0) {
+      return 1;
+    }
+  }
+
+  if (buffer->detached_threads_list != NULL) {
+    free(buffer->detached_threads_list);
+    buffer->detached_threads_list = NULL;
+  }
+
+  free(buffer);
+  buffer = NULL;
+
+  return 0;
+}
+
 void *create_stack(size_t size) {
   void *stack;
 
@@ -45,14 +80,6 @@ void *create_stack(size_t size) {
   return stack;
 }
 
-int destroy_thread(mythread_t thread) {
-  if (munmap(thread->stack, thread->stack_size) == -1) {
-    return errno;
-  }
-
-  return 0;
-}
-
 int mythread_startup(void *arg) {
   mythread_t thread = (mythread_t)arg;
 
@@ -64,6 +91,20 @@ int mythread_startup(void *arg) {
   while (!thread->joined && !thread->detached) {
     futex((void *)&thread->joined, FUTEX_WAIT, 0, NULL, NULL, 0);
     futex((void *)&thread->detached, FUTEX_WAIT, 0, NULL, NULL, 0);
+  }
+
+  if (thread->detached && thread->finished) {
+    if (buffer) {
+      if (buffer->counter + 1 < buffer->capasity) {
+        buffer->detached_threads_list[buffer->counter++] = *thread;
+      }
+    } else {
+      // destroy_thread(thread);
+      return 1;
+    }
+  } else {
+    // destroy_thread(thread);
+    return 1;
   }
 
   return 0;
@@ -104,6 +145,14 @@ int mythread_detach(mythread_t thread) {
     return EINVAL;
   }
 
+  if (!buffer) {
+    buffer = malloc(sizeof(detached_threads_buffer_t));
+    buffer->counter = 0;
+    buffer->capasity = MAX_DETACHED_THREADS;
+    buffer->detached_threads_list =
+        malloc(sizeof(mythread_struct_t) * buffer->capasity);
+  }
+
   thread->detached = 1;
 
   futex((void *)&thread->detached, FUTEX_WAKE, 1, NULL, NULL, 0);
@@ -112,6 +161,10 @@ int mythread_detach(mythread_t thread) {
 }
 
 int mythread_create(mythread_t *tid, void *(*routine)(void *), void *args) {
+  if (buffer != NULL) {
+    detached_cleanup();
+  }
+
   mythread_struct_t *thread;
   void *stack, *stack_top;
 

@@ -1,0 +1,1 @@
+clang -Wl,--dependency-file=CMakeFiles/queue_example.dir/link.d CMakeFiles/queue_example.dir/src/queue_example.c.o -o queue_example  libqueue.a
