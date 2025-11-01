@@ -91,7 +91,7 @@ int mythread_startup(void *arg) {
   mythread_t thread = (mythread_t)arg;
 
   if (setjmp(thread->exit) == 0) {
-    thread->retval = thread->start_routine(thread->args);
+    thread->retval = thread->start_routine(thread->args, thread);
   } else {
     thread->retval = THREAD_CANCELED;
   }
@@ -175,7 +175,8 @@ int mythread_detach(mythread_t thread) {
   return 0;
 }
 
-int mythread_create(mythread_t *tid, void *(*routine)(void *), void *args) {
+int mythread_create(mythread_t *tid, void *(*routine)(void *, mythread_t),
+                    void *args) {
   if (buffer != NULL) {
     detached_cleanup();
   }
