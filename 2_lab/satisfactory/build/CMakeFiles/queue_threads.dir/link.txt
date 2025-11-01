@@ -1,1 +1,0 @@
-clang -Wl,--dependency-file=CMakeFiles/queue_threads.dir/link.d CMakeFiles/queue_threads.dir/src/queue_threads.c.o -o queue_threads  libqueue.a

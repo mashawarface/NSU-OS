@@ -1,5 +1,0 @@
-/home/mary/NSU-OS/2_lab/satisfactory/build/CMakeFiles/queue.dir
-/home/mary/NSU-OS/2_lab/satisfactory/build/CMakeFiles/queue_example.dir
-/home/mary/NSU-OS/2_lab/satisfactory/build/CMakeFiles/queue_threads.dir
-/home/mary/NSU-OS/2_lab/satisfactory/build/CMakeFiles/edit_cache.dir
-/home/mary/NSU-OS/2_lab/satisfactory/build/CMakeFiles/rebuild_cache.dir
