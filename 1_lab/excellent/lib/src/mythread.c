@@ -1,4 +1,3 @@
-#include <stddef.h>
 #define _GNU_SOURCE
 
 #include <asm-generic/errno-base.h>
@@ -7,6 +6,7 @@
 #include <fcntl.h>
 #include <linux/futex.h>
 #include <pthread.h>
+#include <setjmp.h>
 #include <stdatomic.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -20,7 +20,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#include "/home/mary/NSU-OS/1_lab/excellent/lib/include/mythread.h"
+#include "../include/mythread.h"
 
 static int futex(void *addr, int op, int val, const struct timespec *timeout,
                  void *addr2, int val2) {
@@ -30,7 +30,14 @@ static int futex(void *addr, int op, int val, const struct timespec *timeout,
 detached_threads_buffer_t *buffer;
 
 int destroy_thread(mythread_t thread) {
-  if (munmap(thread->stack, thread->stack_size) == -1) {
+  if (thread == NULL || thread->stack == NULL) {
+    return EINVAL;
+  }
+
+  void *stack = thread->stack;
+  size_t stack_size = thread->stack_size;
+
+  if (munmap(stack, stack_size) == -1) {
     return errno;
   }
 
@@ -83,14 +90,18 @@ void *create_stack(size_t size) {
 int mythread_startup(void *arg) {
   mythread_t thread = (mythread_t)arg;
 
-  thread->retval = thread->start_routine(thread->args);
+  if (setjmp(thread->exit) == 0) {
+    thread->retval = thread->start_routine(thread->args);
+  } else {
+    thread->retval = THREAD_CANCELED;
+  }
+
   thread->finished = 1;
 
   futex((unsigned long int *)&thread->finished, FUTEX_WAKE, 1, NULL, NULL, 0);
 
   while (!thread->joined && !thread->detached) {
     futex((void *)&thread->joined, FUTEX_WAIT, 0, NULL, NULL, 0);
-    futex((void *)&thread->detached, FUTEX_WAIT, 0, NULL, NULL, 0);
   }
 
   if (thread->detached && thread->finished) {
@@ -99,12 +110,8 @@ int mythread_startup(void *arg) {
         buffer->detached_threads_list[buffer->counter++] = *thread;
       }
     } else {
-      // destroy_thread(thread);
       return 1;
     }
-  } else {
-    // destroy_thread(thread);
-    return 1;
   }
 
   return 0;
@@ -131,6 +138,8 @@ int mythread_join(mythread_t thread, void **retval) {
 
   futex((void *)&thread->joined, FUTEX_WAKE, 1, NULL, NULL, 0);
 
+  usleep(100);
+
   destroy_thread(thread);
 
   return 0;
@@ -147,10 +156,16 @@ int mythread_detach(mythread_t thread) {
 
   if (!buffer) {
     buffer = malloc(sizeof(detached_threads_buffer_t));
+    if (!buffer) {
+      return ENOMEM;
+    }
     buffer->counter = 0;
     buffer->capasity = MAX_DETACHED_THREADS;
     buffer->detached_threads_list =
         malloc(sizeof(mythread_struct_t) * buffer->capasity);
+    if (!buffer->detached_threads_list) {
+      return ENOMEM;
+    }
   }
 
   thread->detached = 1;
@@ -184,6 +199,7 @@ int mythread_create(mythread_t *tid, void *(*routine)(void *), void *args) {
   thread->joined = 0;
   thread->detached = 0;
   thread->finished = 0;
+  thread->canceled = 0;
 
   stack_top = (void *)thread;
 
@@ -199,4 +215,26 @@ int mythread_create(mythread_t *tid, void *(*routine)(void *), void *args) {
   *tid = thread;
 
   return 0;
+}
+
+int mythread_cancel(mythread_t thread) {
+  if (!thread) {
+    return ESRCH;
+  }
+
+  thread->canceled = 1;
+
+  return 0;
+}
+
+void mythread_testcancel(mythread_t thread) {
+  if (thread->canceled) {
+    mythread_exit(thread);
+  }
+}
+
+void mythread_exit(mythread_t thread) {
+  thread->finished = 1;
+
+  longjmp(thread->exit, 1);
 }

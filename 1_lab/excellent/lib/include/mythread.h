@@ -1,7 +1,10 @@
+#include <pthread.h>
+#include <setjmp.h>
 #include <stddef.h>
 #define PAGE 4096
 #define STACK_SIZE PAGE * 8
-#define MAX_DETACHED_THREADS 1000
+#define MAX_DETACHED_THREADS 10
+#define THREAD_CANCELED ((void *) -1)
 
 #define mythread_cleanup_push(routine, arg)
 #define mythread_cleanup_pop(execute)
@@ -18,6 +21,8 @@ typedef struct mythread {
   volatile int joined;
   volatile int detached;
   volatile int finished;
+  volatile int canceled;
+  jmp_buf exit;
 } mythread_struct_t;
 
 typedef mythread_struct_t *mythread_t;
@@ -33,7 +38,7 @@ typedef struct detached_threads_buffer {
 
 int mythread_create(mythread_t *thread, void *(*routine)(void *), void *args);
 
-void mythread_exit(void *retval);
+void mythread_exit(mythread_t thread);
 
 unsigned long int mythread_self(void);
 
@@ -45,4 +50,4 @@ int mythread_detach(mythread_t thread);
 
 int mythread_cancel(mythread_t thread);
 
-int mythread_testcancel(void);
+void mythread_testcancel(mythread_t thread);
