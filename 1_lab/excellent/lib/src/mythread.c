@@ -2,13 +2,6 @@
 
 #include "../include/mythread.h"
 
-static inline int futex_wait(volatile int *addr, int val) {
-  return syscall(SYS_futex, (int *)addr, FUTEX_WAIT, val, NULL, NULL, 0);
-}
-static inline int futex_wake(volatile int *addr, int num) {
-  return syscall(SYS_futex, (int *)addr, FUTEX_WAKE, num, NULL, NULL, 0);
-}
-
 static int destroy_thread(mythread_t thread) {
   if (thread == NULL || thread->stack == NULL) {
     return EINVAL;
@@ -53,10 +46,9 @@ int mythread_startup(void *arg) {
   }
 
   thread->finished = 1;
-  futex_wake(&thread->finished, 1);
 
   while (!thread->joined) {
-    futex_wait(&thread->joined, 0);
+    usleep(100);
   }
 
   return 0;
@@ -87,10 +79,10 @@ int mythread_create(mythread_t *tid, void *(*routine)(void *, mythread_t),
 
   stack_top = (void *)thread - 16;
 
-  int child_pid = clone(mythread_startup, stack_top,
-                        CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
-                            CLONE_THREAD | CLONE_SYSVSEM,
-                        (void *)thread);
+  int child_pid =
+      clone(mythread_startup, stack_top,
+            CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_THREAD,
+            (void *)thread);
   if (child_pid == -1) {
     destroy_thread(thread);
     return errno;
@@ -113,7 +105,7 @@ int mythread_join(mythread_t thread, void **retval) {
   }
 
   while (!thread->finished) {
-    futex_wait(&thread->finished, 0);
+    usleep(100);
   }
 
   if (retval != NULL) {
@@ -121,9 +113,13 @@ int mythread_join(mythread_t thread, void **retval) {
   }
 
   thread->joined = 1;
-  futex_wake(&thread->joined, 1);
 
-  destroy_thread(thread);
+  usleep(1000);
+
+  int err = destroy_thread(thread);
+  if (err != 0) {
+    return err;
+  }
 
   return 0;
 }

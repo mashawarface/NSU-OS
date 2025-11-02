@@ -9,6 +9,7 @@
 #include <sys/mman.h>
 #include <sys/syscall.h>
 #include <unistd.h>
+#include <stdio.h>
 
 #define PAGE 4096
 #define STACK_SIZE PAGE * 8
