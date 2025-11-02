@@ -1,23 +1,22 @@
-#include <pthread.h>
+#ifndef _MY_THREAD_H_
+#define _MY_THREAD_H_
+
 #include <setjmp.h>
 #include <stddef.h>
+
 #define PAGE 4096
 #define STACK_SIZE PAGE * 8
 #define MAX_DETACHED_THREADS 10
 #define THREAD_CANCELED ((void *)-1)
 
-#define mythread_cleanup_push(routine, arg)
-#define mythread_cleanup_pop(execute)
-
 typedef struct mythread {
-  unsigned long int thread_id;
+  unsigned long thread_id;
   void *(*start_routine)(void *, struct mythread *);
   void *args;
   void *retval;
   void *stack;
   int stack_size;
   volatile int joined;
-  volatile int detached;
   volatile int finished;
   volatile int canceled;
   jmp_buf exit;
@@ -25,30 +24,18 @@ typedef struct mythread {
 
 typedef mythread_struct_t *mythread_t;
 
-typedef void *(*start_routine_t)(void *, mythread_t);
+typedef void *(*routine_t)(void *, mythread_t);
 
-typedef struct mythread_cleanup_buffer {
-} mythread_cleanup_buffer_t;
+int mythread_create(mythread_t *thread, routine_t routine, void *args);
 
-typedef struct detached_threads_buffer {
-  size_t counter;
-  size_t capasity;
-  mythread_struct_t *detached_threads_list;
-} detached_threads_buffer_t;
-
-int mythread_create(mythread_t *thread, void *(*routine)(void *, mythread_t),
-                    void *args);
-
-void mythread_exit(mythread_t thread);
-
-unsigned long int mythread_self(void);
+size_t mythread_self(mythread_t thread);
 
 int mythread_equal(mythread_t thread1, mythread_t thread2);
 
 int mythread_join(mythread_t thread, void **retval);
 
-int mythread_detach(mythread_t thread);
-
 int mythread_cancel(mythread_t thread);
 
 void mythread_testcancel(mythread_t thread);
+
+#endif // _MY_THREAD_H_

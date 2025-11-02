@@ -12,6 +12,8 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 #     -fno-omit-frame-pointer
 # )
 
+set(COMPILE_OPTIONS -g)
+
 # set(LINK_OPTIONS
 #     -fsanitize=address,undefined,leak
 # )
@@ -31,7 +33,6 @@ set(TEST_EXECUTABLES
     tests/print
     tests/five_threads
     tests/retval
-    tests/detach
     tests/cancel
 )
 
