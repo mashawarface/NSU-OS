@@ -12,20 +12,19 @@
 
 #define PAGE 4096
 #define STACK_SIZE PAGE * 8
-#define MAX_DETACHED_THREADS 10
 #define THREAD_CANCELED ((void *)-1)
 
 typedef struct mythread {
-  unsigned long thread_id;
+  unsigned long   thread_id;
   void *(*start_routine)(void *, struct mythread *);
-  void *args;
-  void *retval;
-  void *stack;
-  int stack_size;
-  volatile int joined;
-  volatile int finished;
-  volatile int canceled;
-  jmp_buf exit;
+  void            *args;
+  void            *retval;
+  void            *stack;
+  int             stack_size;
+  volatile int    joined;
+  volatile int    finished;
+  volatile int    canceled;
+  jmp_buf         exit;
 } mythread_struct_t;
 
 typedef mythread_struct_t *mythread_t;
