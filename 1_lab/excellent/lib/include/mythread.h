@@ -1,8 +1,14 @@
 #ifndef _MY_THREAD_H_
 #define _MY_THREAD_H_
 
+#include <errno.h>
+#include <linux/futex.h>
+#include <sched.h>
 #include <setjmp.h>
-#include <stddef.h>
+#include <string.h>
+#include <sys/mman.h>
+#include <sys/syscall.h>
+#include <unistd.h>
 
 #define PAGE 4096
 #define STACK_SIZE PAGE * 8
