@@ -67,7 +67,7 @@ int mythread_create(mythread_t *tid, void *(*routine)(void *, mythread_t),
 
   thread =
       (mythread_struct_t *)(stack + STACK_SIZE - sizeof(mythread_struct_t));
-  thread->thread_id = (unsigned long int)thread;
+  thread->thread_id = (unsigned long)thread;
   thread->start_routine = routine;
   thread->args = args;
   thread->retval = NULL;
@@ -77,7 +77,7 @@ int mythread_create(mythread_t *tid, void *(*routine)(void *, mythread_t),
   thread->finished = 0;
   thread->canceled = 0;
 
-  stack_top = (void *)thread - 16;
+  stack_top = (void *)thread;
 
   int child_pid =
       clone(mythread_startup, stack_top,

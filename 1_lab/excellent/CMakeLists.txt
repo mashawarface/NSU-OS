@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(mythread LANGUAGES C)
 
-set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
 # set(COMPILE_OPTIONS
@@ -11,8 +11,6 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 #     -fsanitize=address,undefined,leak
 #     -fno-omit-frame-pointer
 # )
-
-set(COMPILE_OPTIONS -g)
 
 # set(LINK_OPTIONS
 #     -fsanitize=address,undefined,leak

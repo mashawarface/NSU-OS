@@ -13,8 +13,10 @@ void *my_routine(void *args, mythread_t thread) {
 }
 
 int main(void) {
-  mythread_t tid1, tid2, tid3;
+  mythread_t tid1, tid2;
   int err;
+
+  printf("%d\n", getpid());
 
   err = mythread_create(&tid1, my_routine, NULL);
   if (err != 0) {
@@ -39,6 +41,8 @@ int main(void) {
     printf("Error in joining a thread, because of %s!\n", strerror(err));
     return 1;
   }
+
+  sleep(1000);
 
   return 0;
 }

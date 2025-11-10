@@ -2,14 +2,13 @@
 #define _MY_THREAD_H_
 
 #include <errno.h>
-#include <linux/futex.h>
 #include <sched.h>
 #include <setjmp.h>
+#include <stdio.h>
 #include <string.h>
 #include <sys/mman.h>
 #include <sys/syscall.h>
 #include <unistd.h>
-#include <stdio.h>
 
 #define PAGE 4096
 #define STACK_SIZE PAGE * 8
