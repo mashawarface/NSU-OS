@@ -8,6 +8,11 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#define LOOP                                                                   \
+  for (int i = 0; i < 1000000; i++) {                                          \
+    counter++;                                                                 \
+  }
+
 typedef struct _QueueNode {
   int val;
   struct _QueueNode *next;

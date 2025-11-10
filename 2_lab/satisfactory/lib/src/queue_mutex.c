@@ -1,10 +1,43 @@
 #define _GNU_SOURCE
 
 #include <assert.h>
+#include <bits/pthreadtypes.h>
 #include <pthread.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
-#include "../include/queue.h"
+// #include "../include/queue.h"
+
+typedef struct _QueueNode {
+  int val;
+  struct _QueueNode *next;
+} qnode_t;
+
+typedef struct _Queue {
+  qnode_t *first;
+  qnode_t *last;
+
+  pthread_t qmonitor_tid;
+
+  pthread_mutex_t mutex;
+
+  int count;
+  int max_count;
+
+  // queue statistics
+  long add_attempts;
+  long get_attempts;
+  long add_count;
+  long get_count;
+} queue_t;
+
+queue_t *queue_init(int max_count);
+void queue_destroy(queue_t *q);
+int queue_add(queue_t *q, int val);
+int queue_get(queue_t *q, int *val);
+void queue_print_stats(queue_t *q);
 
 void *qmonitor(void *arg) {
   queue_t *q = (queue_t *)arg;
@@ -36,6 +69,12 @@ queue_t *queue_init(int max_count) {
   q->add_attempts = q->get_attempts = 0;
   q->add_count = q->get_count = 0;
 
+  err = pthread_mutex_init(&q->mutex, NULL);
+  if (err != 0) {
+    printf("Error in initializing of mutex because of %s!\n", strerror(err));
+    abort();
+  }
+
   err = pthread_create(&q->qmonitor_tid, NULL, qmonitor, q);
   if (err) {
     printf("queue_init: pthread_create() failed: %s\n", strerror(err));
@@ -52,16 +91,23 @@ void queue_destroy(queue_t *q) {
     free(tmp);
   }
 
+  pthread_mutex_destroy(&q->mutex);
+
   free(q);
 }
 
 int queue_add(queue_t *q, int val) {
+  pthread_mutex_lock(&q->mutex);
+
   q->add_attempts++;
 
   assert(q->count <= q->max_count);
 
-  if (q->count == q->max_count)
+  if (q->count == q->max_count) {
+    pthread_mutex_unlock(&q->mutex);
+
     return 0;
+  }
 
   qnode_t *new = malloc(sizeof(qnode_t));
   if (!new) {
@@ -72,35 +118,35 @@ int queue_add(queue_t *q, int val) {
   new->val = val;
   new->next = NULL;
 
-  // 1. q->first = q->last = 1, so goto (2)
-
-  // 2. q->fisrt = null, q->last = 2, so goto (1)
-
-  /*(1)*/ if (!q->first) {
+  if (!q->first) {
     q->first = q->last = new;
-    // q->first = q->last = 3, error in reader, bc of (*)
-  } /*(2)*/ else {
-    // q_get() = 1, q->fisrt = null, q-last = 2, reader is expecting 2 (*)
+  } else {
     q->last->next = new;
     q->last = q->last->next;
   }
 
   q->count++;
+
   q->add_count++;
+
+  pthread_mutex_unlock(&q->mutex);
 
   return 1;
 }
 
 int queue_get(queue_t *q, int *val) {
+  pthread_mutex_lock(&q->mutex);
+
   q->get_attempts++;
 
   assert(q->count >= 0);
 
-  if (q->count == 0)
-    return 0;
+  if (q->count == 0) {
+    pthread_mutex_unlock(&q->mutex);
 
-  // q->first = q->last = 1, after first get, q->first = null, when we
-  // attempting calling second get, there is null pointer dereferences
+    return 0;
+  }
+
   qnode_t *tmp = q->first;
 
   *val = tmp->val;
@@ -108,7 +154,10 @@ int queue_get(queue_t *q, int *val) {
 
   free(tmp);
   q->count--;
+
   q->get_count++;
+
+  pthread_mutex_unlock(&q->mutex);
 
   return 1;
 }
