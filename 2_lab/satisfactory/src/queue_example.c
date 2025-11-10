@@ -6,7 +6,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "/home/mary/NSU-OS/2_lab/satisfactory/lib/include/queue.h"
+#include "../lib/include/queue.h"
 
 int main() {
   queue_t *q;

@@ -9,7 +9,7 @@
 #include <pthread.h>
 #include <sched.h>
 
-#include "/home/mary/NSU-OS/2_lab/satisfactory/lib/include/queue.h"
+#include "../lib/include/queue.h"
 
 #define RED "\033[41m"
 #define NOCOLOR "\033[0m"
