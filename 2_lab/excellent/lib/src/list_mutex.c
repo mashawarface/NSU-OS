@@ -1,0 +1,82 @@
+#include <assert.h>
+#include <pthread.h>
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "../include/list_mutex.h"
+
+void generate_string(char *buf, int max_length) {
+  const char charset[] = "01";
+  int charset_length = strlen(charset);
+  int length = rand() % max_length;
+
+  for (int i = 0; i < length; i++) {
+    int random_index = rand() % charset_length;
+    buf[i] = charset[random_index];
+  }
+
+  buf[length] = '\0';
+}
+
+list_t *list_init(size_t size) {
+  int err;
+
+  list_t *list = malloc(sizeof(list_t));
+  if (list == NULL) {
+    printf("Error in allocating memory for list!\n");
+    abort();
+  }
+
+  err = pthread_mutex_init(&list->sync, NULL);
+  if (err != 0) {
+    printf("Error in initializing of mutex because of %s!\n", strerror(err));
+    abort();
+  }
+
+  node_t *current;
+
+  size_t added = 0;
+
+  while (added != size) {
+    /* Start of node's initializing */
+    node_t *node = malloc(sizeof(node_t));
+    if (node == NULL) {
+      printf("Error in allocating memory for node!\n");
+      abort();
+    }
+
+    generate_string(node->buf, MAX_LENGTH);
+
+    err = pthread_mutex_init(&node->sync, NULL);
+    if (err != 0) {
+      printf("Error in initializing of mutex because of %s!\n", strerror(err));
+      abort();
+    }
+
+    node->next = NULL;
+    /* End of node's initializing */
+
+    if (!list->first) {
+      list->first = node;
+      current = list->first;
+    } else {
+      current->next = node;
+      current = current->next;
+    }
+
+    added++;
+  }
+
+  return list;
+}
+
+void print_list(list_t *list) {
+  node_t *current = list->first;
+
+  while (current) {
+    printf("%s\n", current->buf);
+    current = current->next;
+  }
+}
