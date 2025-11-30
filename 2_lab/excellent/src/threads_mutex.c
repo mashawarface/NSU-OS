@@ -13,14 +13,16 @@
 #define THREAD_SWAP_COUNT 3
 #define THREAD_SEARCH_COUNT 3
 
-size_t counter_ascend = 0, counter_descend = 0, counter_equal = 0,
-       counter_swap_first = 0, counter_swap_second = 0, counter_swap_third = 0;
+#define LIST_SIZE 5
 
 void *search_ascend(void *arg) {
-  list_t *list = (list_t *)arg;
+  thread_arg_t *thread_arg = (thread_arg_t *)arg;
+
+  list_t *list = thread_arg->list;
+  size_t *iterations = thread_arg->counter, counter = 0;
+
   node_t *current = list->first;
 
-  size_t counter;
   int prev_lenght = 0, curr_length;
 
   while (1) {
@@ -35,7 +37,8 @@ void *search_ascend(void *arg) {
     current = current->next;
 
     if (current == NULL) {
-      counter_ascend++;
+      (*iterations)++;
+
       current = list->first;
     }
   }
@@ -44,10 +47,13 @@ void *search_ascend(void *arg) {
 }
 
 void *search_descend(void *arg) {
-  list_t *list = (list_t *)arg;
+  thread_arg_t *thread_arg = (thread_arg_t *)arg;
+
+  list_t *list = thread_arg->list;
+  size_t *iterations = thread_arg->counter, counter = 0;
+
   node_t *current = list->first;
 
-  size_t counter;
   int prev_lenght = 0, curr_length;
 
   while (1) {
@@ -62,7 +68,8 @@ void *search_descend(void *arg) {
     current = current->next;
 
     if (current == NULL) {
-      counter_descend++;
+      (*iterations)++;
+
       current = list->first;
     }
   }
@@ -71,10 +78,13 @@ void *search_descend(void *arg) {
 }
 
 void *search_equal(void *arg) {
-  list_t *list = (list_t *)arg;
+  thread_arg_t *thread_arg = (thread_arg_t *)arg;
+
+  list_t *list = thread_arg->list;
+  size_t *iterations = thread_arg->counter, counter = 0;
+
   node_t *current = list->first;
 
-  size_t counter;
   int prev_lenght = 0, curr_length;
 
   while (1) {
@@ -89,7 +99,7 @@ void *search_equal(void *arg) {
     current = current->next;
 
     if (current == NULL) {
-      counter_equal++;
+      (*iterations)++;
       current = list->first;
     }
   }
@@ -97,77 +107,164 @@ void *search_equal(void *arg) {
   return NULL;
 }
 
-/* Swap current node with next node. */
 void *swap(void *arg) {
-  list_t *list = (list_t *)arg;
+  thread_arg_t *thread_arg = (thread_arg_t *)arg;
 
-  int make_swap = 1;
+  list_t *list = thread_arg->list;
+  size_t *counter = thread_arg->counter;
+
+  int err;
+
+  if (!list) {
+    return NULL;
+  }
 
   while (1) {
-    node_t *prev = NULL, *next = NULL;
+    node_t *prev = NULL, *curr = NULL, *next = NULL;
 
-    node_t *current = list->first;
+    while (1) {
+      int make_swap = rand() % 2;
 
-    while (current && current->next) {
-      // make_swap = rand() % 2;
+      if (!make_swap) {
+        continue;
+      }
 
-      if (make_swap) {
-        puts("list before swap!");
-        print_list(list);
+      if (!prev) {
+        err = pthread_mutex_lock(&list->sync);
+        if (err) {
+          printf("Can't lock mutex bc of %s!\n", strerror(err));
+          break;
+        }
 
-        next = current->next;
+        node_t *first = list->first;
+        if (!first || !first->next) {
+          break;
+        }
 
-        current->next = next->next;
-        next->next = current;
+        err = pthread_mutex_lock(&first->sync);
+        if (err) {
+          pthread_mutex_unlock(&list->sync);
+          printf("Can't lock mutex bc of %s!\n", strerror(err));
+          break;
+        }
 
-        if (!prev)
-          list->first = next;
-        else
-          prev->next = next;
+        curr = first;
+        if (!curr->next) {
+          pthread_mutex_unlock(&list->sync);
+          pthread_mutex_unlock(&curr->sync);
+          break;
+        }
 
-        prev = next;
+        next = curr->next;
+        err = pthread_mutex_lock(&next->sync);
+        if (err) {
+          pthread_mutex_unlock(&list->sync);
+          pthread_mutex_unlock(&curr->sync);
+          printf("Can't lock mutex bc of %s!\n", strerror(err));
 
-        counter_swap_third++;
+          break;
+        }
 
-        puts("list after swap!");
-        print_list(list);
-        sleep(1);
+        if (curr->next != next) {
+          pthread_mutex_unlock(&list->sync);
+          pthread_mutex_unlock(&curr->sync);
+          pthread_mutex_unlock(&next->sync);
+
+          break;
+        }
+
+        list->first = next;
+        curr->next = next->next;
+        next->next = curr;
+
+        (*counter)++;
+
+        prev = curr;
+
+        pthread_mutex_unlock(&list->sync);
+        pthread_mutex_unlock(&curr->sync);
+        pthread_mutex_unlock(&next->sync);
       } else {
-        puts("do not swap!");
-        prev = current;
-        current = current->next;
+        err = pthread_mutex_lock(&prev->sync);
+        if (err) {
+          printf("Can't lock mutex bc of %s!\n", strerror(err));
+          break;
+        }
+
+        if (!prev->next || !prev->next->next) {
+          pthread_mutex_unlock(&prev->sync);
+          prev = NULL;
+          break;
+        }
+
+        curr = prev->next;
+        err = pthread_mutex_lock(&curr->sync);
+        if (err) {
+          pthread_mutex_unlock(&prev->sync);
+          printf("Can't lock mutex bc of %s!\n", strerror(err));
+          break;
+        }
+
+        next = curr->next;
+        err = pthread_mutex_lock(&next->sync);
+        if (err) {
+          pthread_mutex_unlock(&curr->sync);
+          pthread_mutex_unlock(&prev->sync);
+          printf("Can't lock mutex bc of %s!\n", strerror(err));
+          break;
+        }
+
+        if (prev->next != curr || curr->next != next) {
+          pthread_mutex_unlock(&next->sync);
+          pthread_mutex_unlock(&curr->sync);
+          pthread_mutex_unlock(&prev->sync);
+
+          break;
+        }
+
+        prev->next = next;
+        curr->next = next->next;
+        next->next = curr;
+
+        (*counter)++;
+
+        node_t *tmp = prev;
+        prev = curr;
+
+        pthread_mutex_unlock(&tmp->sync);
+        pthread_mutex_unlock(&curr->sync);
+        pthread_mutex_unlock(&next->sync);
       }
     }
   }
 }
 
-// typedef struct args {
-//   list_t *list;
-//   size_t counter;
-// } thread_arg_t;
-
 int main() {
-  srand(time(0));
+  // srand(time(0));
 
-  list_t *list = list_init(5);
+  list_t *list = list_init(LIST_SIZE);
 
-  pthread_t tids[THREAD_COUNT];
-  void *(*thread_funcs[THREAD_COUNT])(void *) = {
-      search_ascend, search_descend, search_equal, swap, swap, swap};
   int err;
 
-  // for (int i = 0; i < THREAD_COUNT; i++) {
-  //   err = pthread_create(&tids[i], NULL, thread_funcs[i], list);
-  //   if (err != 0) {
-  //     printf("Error in creating thread #%d because of %s!\n", i,
-  //     strerror(err)); return 1;
-  //   }
-  // }
+  pthread_t tids[THREAD_COUNT];
 
-  // pthread_create(&tids[0], NULL, search_ascend, list);
-  // pthread_create(&tids[1], NULL, search_descend, list);
-  // pthread_create(&tids[2], NULL, search_equal, list);
-  pthread_create(&tids[3], NULL, swap, list);
+  void *(*thread_funcs[THREAD_COUNT])(void *) = {
+      search_ascend, search_descend, search_equal, swap, swap, swap};
+
+  size_t counters[THREAD_COUNT] = {0, 0, 0, 0, 0, 0};
+
+  thread_arg_t args[THREAD_COUNT] = {
+      {list, &counters[0]}, {list, &counters[1]}, {list, &counters[2]},
+      {list, &counters[3]}, {list, &counters[4]}, {list, &counters[5]},
+  };
+
+  for (int i = 0; i < THREAD_COUNT; i++) {
+    err = pthread_create(&tids[i], NULL, thread_funcs[i], &args[i]);
+    if (err != 0) {
+      printf("Error in creating thread #%d because of %s!\n", i, strerror(err));
+      return 1;
+    }
+  }
 
   while (1) {
     printf("List stats:\n"
@@ -177,8 +274,8 @@ int main() {
            "\tFisrt swapping thread:     %zu successful swap(s)\n"
            "\tSecond swapping thread:    %zu successful swap(s)\n"
            "\tThird swapping thread:     %zu successful swap(s)\n",
-           counter_ascend, counter_descend, counter_equal, counter_swap_first,
-           counter_swap_second, counter_swap_third);
+           counters[0], counters[1], counters[2], counters[3], counters[4],
+           counters[5]);
     sleep(2);
   }
 
