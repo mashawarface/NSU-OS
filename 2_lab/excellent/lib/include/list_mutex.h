@@ -4,7 +4,7 @@
 #include <pthread.h>
 #include <time.h>
 
-#define MAX_LENGTH 100
+#define MAX_LENGTH 10
 
 typedef struct node {
   char buf[MAX_LENGTH];

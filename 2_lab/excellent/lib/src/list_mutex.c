@@ -8,13 +8,10 @@
 #include "../include/list_mutex.h"
 
 void generate_string(char *buf, int max_length) {
-  const char charset[] = "01";
-  int charset_length = strlen(charset);
-  int length = rand() % max_length;
+  int length = rand() % (max_length - 1) + 1;
 
   for (int i = 0; i < length; i++) {
-    int random_index = rand() % charset_length;
-    buf[i] = charset[random_index];
+    buf[i] = '1';
   }
 
   buf[length] = '\0';
