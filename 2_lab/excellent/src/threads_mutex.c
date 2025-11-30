@@ -97,32 +97,25 @@ void *search_equal(void *arg) {
   return NULL;
 }
 
-void *swap1(void *arg) {
+/* Swap current node with next node. */
+void *swap(void *arg) {
   list_t *list = (list_t *)arg;
 
-  int make_swap;
+  int make_swap = 1;
 
   while (1) {
     node_t *prev = NULL, *next = NULL;
 
-    pthread_mutex_lock(&list->sync);
     node_t *current = list->first;
-    pthread_mutex_unlock(&list->sync);
 
     while (current && current->next) {
-      make_swap = rand() % 2;
+      // make_swap = rand() % 2;
 
       if (make_swap) {
+        puts("list before swap!");
+        print_list(list);
+
         next = current->next;
-
-        if (!prev) {
-          pthread_mutex_lock(&list->sync);
-        } else {
-          pthread_mutex_lock(&prev->sync);
-        }
-
-        pthread_mutex_lock(&current->sync);
-        pthread_mutex_lock(&next->sync);
 
         current->next = next->next;
         next->next = current;
@@ -131,322 +124,19 @@ void *swap1(void *arg) {
           list->first = next;
         else
           prev->next = next;
-
-        pthread_mutex_unlock(&current->sync);
-        pthread_mutex_unlock(&next->sync);
-
-        if (!prev)
-          pthread_mutex_unlock(&list->sync);
-        else
-          pthread_mutex_unlock(&prev->sync);
-
-        prev = next;
-
-        counter_swap_first++;
-      } else {
-        prev = current;
-        current = current->next;
-      }
-    }
-  }
-}
-
-void *swap2(void *arg) {
-  list_t *list = (list_t *)arg;
-
-  int make_swap;
-
-  while (1) {
-    node_t *prev = NULL, *next = NULL;
-
-    pthread_mutex_lock(&list->sync);
-    node_t *current = list->first;
-    pthread_mutex_unlock(&list->sync);
-
-    while (current && current->next) {
-      make_swap = rand() % 2;
-
-      if (make_swap) {
-        next = current->next;
-
-        if (!prev) {
-          pthread_mutex_lock(&list->sync);
-        } else {
-          pthread_mutex_lock(&prev->sync);
-        }
-
-        pthread_mutex_lock(&current->sync);
-        pthread_mutex_lock(&next->sync);
-
-        current->next = next->next;
-        next->next = current;
-
-        if (!prev)
-          list->first = next;
-        else
-          prev->next = next;
-
-        pthread_mutex_unlock(&current->sync);
-        pthread_mutex_unlock(&next->sync);
-
-        if (!prev)
-          pthread_mutex_unlock(&list->sync);
-        else
-          pthread_mutex_unlock(&prev->sync);
-
-        prev = next;
-
-        counter_swap_second++;
-      } else {
-        prev = current;
-        current = current->next;
-      }
-    }
-  }
-}
-
-void *swap3(void *arg) {
-  list_t *list = (list_t *)arg;
-
-  int make_swap;
-
-  while (1) {
-    node_t *prev = NULL, *next = NULL;
-
-    pthread_mutex_lock(&list->sync);
-    node_t *current = list->first;
-    pthread_mutex_unlock(&list->sync);
-
-    while (current && current->next) {
-      make_swap = rand() % 2;
-
-      if (make_swap) {
-        next = current->next;
-
-        if (!prev) {
-          pthread_mutex_lock(&list->sync);
-        } else {
-          pthread_mutex_lock(&prev->sync);
-        }
-
-        pthread_mutex_lock(&current->sync);
-        pthread_mutex_lock(&next->sync);
-        current->next = next->next;
-        next->next = current;
-
-        if (!prev)
-          list->first = next;
-        else
-          prev->next = next;
-
-        pthread_mutex_unlock(&current->sync);
-        pthread_mutex_unlock(&next->sync);
-
-        if (!prev)
-          pthread_mutex_unlock(&list->sync);
-        else
-          pthread_mutex_unlock(&prev->sync);
 
         prev = next;
 
         counter_swap_third++;
+
+        puts("list after swap!");
+        print_list(list);
+        sleep(1);
       } else {
+        puts("do not swap!");
         prev = current;
         current = current->next;
       }
-    }
-  }
-}
-
-/* Swap current node with next node. */
-void *swap_first(void *arg) {
-  list_t *list = (list_t *)arg;
-  node_t *current = list->first;
-  node_t *prev = current;
-  node_t *next = current->next;
-
-  int make_swap = 0;
-
-  while (1) {
-    make_swap = rand() % 2;
-
-    if (make_swap) {
-      if (current == list->first) {
-        pthread_mutex_lock(&list->sync);
-        pthread_mutex_lock(&current->sync);
-        pthread_mutex_lock(&next->sync);
-
-        node_t *tmp = next->next;
-
-        next->next = current;
-        current->next = tmp;
-        list->first = next;
-
-        free(tmp);
-
-        pthread_mutex_unlock(&next->sync);
-        pthread_mutex_unlock(&current->sync);
-        pthread_mutex_unlock(&list->sync);
-      }
-
-      else {
-        pthread_mutex_lock(&prev->sync);
-        pthread_mutex_lock(&current->sync);
-        pthread_mutex_lock(&next->sync);
-
-        node_t *tmp = next->next;
-
-        prev->next = next;
-        next->next = current;
-        current->next = tmp;
-
-        free(tmp);
-
-        pthread_mutex_unlock(&next->sync);
-        pthread_mutex_unlock(&current->sync);
-        pthread_mutex_unlock(&prev->sync);
-      }
-
-      counter_swap_first++;
-    }
-
-    /* If we on the last element, then we do not swap, just make current node
-   point to the start of the list. */
-    if (!current->next) {
-      prev = current = list->first;
-      next = current->next;
-    } else {
-      prev = current;
-      current = current->next;
-      next = current->next;
-    }
-  }
-}
-
-void *swap_second(void *arg) {
-  list_t *list = (list_t *)arg;
-  node_t *current = list->first;
-  node_t *prev = current;
-  node_t *next = current->next;
-
-  int make_swap = 0;
-
-  while (1) {
-    make_swap = rand() % 2;
-
-    if (make_swap) {
-      if (current == list->first) {
-        pthread_mutex_lock(&list->sync);
-        pthread_mutex_lock(&current->sync);
-        pthread_mutex_lock(&next->sync);
-
-        node_t *tmp = next->next;
-
-        next->next = current;
-        current->next = tmp;
-        list->first = next;
-
-        free(tmp);
-
-        pthread_mutex_unlock(&next->sync);
-        pthread_mutex_unlock(&current->sync);
-        pthread_mutex_unlock(&list->sync);
-      }
-
-      else {
-        pthread_mutex_lock(&prev->sync);
-        pthread_mutex_lock(&current->sync);
-        pthread_mutex_lock(&next->sync);
-
-        node_t *tmp = next->next;
-
-        prev->next = next;
-        next->next = current;
-        current->next = tmp;
-
-        free(tmp);
-
-        pthread_mutex_unlock(&next->sync);
-        pthread_mutex_unlock(&current->sync);
-        pthread_mutex_unlock(&prev->sync);
-      }
-
-      counter_swap_second++;
-    }
-
-    /* If we on the last element, then we do not swap, just make current node
-   point to the start of the list. */
-    if (!current->next) {
-      prev = current = list->first;
-      next = current->next;
-    } else {
-      prev = current;
-      current = current->next;
-      next = current->next;
-    }
-  }
-}
-
-void *swap_third(void *arg) {
-  list_t *list = (list_t *)arg;
-  node_t *current = list->first;
-  node_t *prev = current;
-  node_t *next = current->next;
-
-  int make_swap = 0;
-
-  while (1) {
-    make_swap = rand() % 2;
-
-    if (make_swap) {
-      if (current == list->first) {
-        pthread_mutex_lock(&list->sync);
-        pthread_mutex_lock(&current->sync);
-        pthread_mutex_lock(&next->sync);
-
-        node_t *tmp = next->next;
-
-        next->next = current;
-        current->next = tmp;
-        list->first = next;
-
-        free(tmp);
-
-        pthread_mutex_unlock(&next->sync);
-        pthread_mutex_unlock(&current->sync);
-        pthread_mutex_unlock(&list->sync);
-      }
-
-      else {
-        pthread_mutex_lock(&prev->sync);
-        pthread_mutex_lock(&current->sync);
-        pthread_mutex_lock(&next->sync);
-
-        node_t *tmp = next->next;
-
-        prev->next = next;
-        next->next = current;
-        current->next = tmp;
-
-        free(tmp);
-
-        pthread_mutex_unlock(&next->sync);
-        pthread_mutex_unlock(&current->sync);
-        pthread_mutex_unlock(&prev->sync);
-      }
-
-      counter_swap_third++;
-    }
-
-    /* If we on the last element, then we do not swap, just make current node
-   point to the start of the list. */
-    if (!current->next) {
-      prev = current = list->first;
-      next = current->next;
-    } else {
-      prev = current;
-      current = current->next;
-      next = current->next;
     }
   }
 }
@@ -459,12 +149,11 @@ void *swap_third(void *arg) {
 int main() {
   srand(time(0));
 
-  list_t *list = list_init(1000);
+  list_t *list = list_init(5);
 
   pthread_t tids[THREAD_COUNT];
-  void *(*thread_funcs[THREAD_COUNT])(void *) = {search_ascend, search_descend,
-                                                 search_equal,  swap_first,
-                                                 swap_second,   swap_third};
+  void *(*thread_funcs[THREAD_COUNT])(void *) = {
+      search_ascend, search_descend, search_equal, swap, swap, swap};
   int err;
 
   // for (int i = 0; i < THREAD_COUNT; i++) {
@@ -478,8 +167,7 @@ int main() {
   // pthread_create(&tids[0], NULL, search_ascend, list);
   // pthread_create(&tids[1], NULL, search_descend, list);
   // pthread_create(&tids[2], NULL, search_equal, list);
-  pthread_create(&tids[3], NULL, swap1, list);
-  pthread_create(&tids[4], NULL, swap2, list);
+  pthread_create(&tids[3], NULL, swap, list);
 
   while (1) {
     printf("List stats:\n"
