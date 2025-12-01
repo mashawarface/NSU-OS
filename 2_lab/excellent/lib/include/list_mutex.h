@@ -24,6 +24,7 @@ typedef struct args {
 
 
 list_t *list_init(size_t size);
+void list_destroy(list_t *list);
 void print_list(list_t *list);
 
 

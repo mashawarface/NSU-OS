@@ -69,6 +69,22 @@ list_t *list_init(size_t size) {
   return list;
 }
 
+void list_destroy(list_t *list) {
+  node_t *first = list->first;
+
+  while (first) {
+    node_t *tmp = first->next;
+
+    first = first->next;
+
+    pthread_mutex_destroy(&tmp->sync);
+    free(tmp);
+  }
+
+  pthread_mutex_destroy(&list->sync);
+  free(list);
+}
+
 void print_list(list_t *list) {
   node_t *current = list->first;
 

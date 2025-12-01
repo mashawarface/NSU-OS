@@ -276,7 +276,7 @@ int main() {
            "\tThird swapping thread:     %zu successful swap(s)\n",
            counters[0], counters[1], counters[2], counters[3], counters[4],
            counters[5]);
-    sleep(2);
+    sleep(1);
   }
 
   for (int i = 0; i < THREAD_COUNT; i++) {
