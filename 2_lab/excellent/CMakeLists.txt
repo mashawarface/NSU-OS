@@ -15,6 +15,7 @@ add_library(list_mutex STATIC
 add_executable(threads_mutex
     ${CMAKE_SOURCE_DIR}/src/threads_mutex.c
 )
+
 target_link_libraries(threads_mutex list_mutex)
 
 add_library(list_rwlock STATIC
@@ -24,8 +25,21 @@ add_library(list_rwlock STATIC
 add_executable(threads_rwlock
     ${CMAKE_SOURCE_DIR}/src/threads_rwlock.c
 )
+
 target_link_libraries(threads_rwlock list_rwlock)
+
+add_library(list_spin STATIC
+    ${CMAKE_SOURCE_DIR}/lib/src/list_spin.c
+)
+
+add_executable(threads_spin
+    ${CMAKE_SOURCE_DIR}/src/threads_spin.c
+)
+
+target_link_libraries(threads_spin list_spin)
 
 find_package(Threads REQUIRED)
 target_link_libraries(threads_mutex Threads::Threads)
 target_link_libraries(threads_rwlock Threads::Threads)
+target_link_libraries(threads_spin Threads::Threads)
+
