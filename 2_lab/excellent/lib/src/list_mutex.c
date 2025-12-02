@@ -23,13 +23,16 @@ list_t *list_init(size_t size) {
   list_t *list = malloc(sizeof(list_t));
   if (list == NULL) {
     printf("Error in allocating memory for list!\n");
-    abort();
+    return NULL;
   }
+
+  list->first = NULL;
 
   err = pthread_mutex_init(&list->sync, NULL);
   if (err != 0) {
     printf("Error in initializing of mutex because of %s!\n", strerror(err));
-    abort();
+    free(list);
+    return NULL;
   }
 
   node_t *current;
@@ -41,7 +44,8 @@ list_t *list_init(size_t size) {
     node_t *node = malloc(sizeof(node_t));
     if (node == NULL) {
       printf("Error in allocating memory for node!\n");
-      abort();
+      list_destroy(list);
+      return NULL;
     }
 
     generate_string(node->buf, MAX_LENGTH);
@@ -49,7 +53,8 @@ list_t *list_init(size_t size) {
     err = pthread_mutex_init(&node->sync, NULL);
     if (err != 0) {
       printf("Error in initializing of mutex because of %s!\n", strerror(err));
-      abort();
+      list_destroy(list);
+      return NULL;
     }
 
     node->next = NULL;
@@ -73,7 +78,7 @@ void list_destroy(list_t *list) {
   node_t *first = list->first;
 
   while (first) {
-    node_t *tmp = first->next;
+    node_t *tmp = first;
 
     first = first->next;
 

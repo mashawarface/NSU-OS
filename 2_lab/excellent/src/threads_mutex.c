@@ -1,5 +1,7 @@
 #include <assert.h>
+#include <errno.h>
 #include <pthread.h>
+#include <signal.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,89 +12,76 @@
 #include "../lib/include/list_mutex.h"
 
 #define THREAD_COUNT 6
-#define THREAD_SWAP_COUNT 3
-#define THREAD_SEARCH_COUNT 3
+#define SEARCH_THREAD_COUNT 3
+#define SWAP_THREAD_COUNT 3
 
-#define LIST_SIZE 5
-
-void *search_ascend(void *arg) {
-  thread_arg_t *thread_arg = (thread_arg_t *)arg;
-
-  list_t *list = thread_arg->list;
-  size_t *iterations = thread_arg->counter, counter = 0;
-
-  node_t *current = list->first;
-
-  int prev_lenght = 0, curr_length;
-
-  while (1) {
-    pthread_mutex_lock(&current->sync);
-
-    curr_length = strlen(current->buf);
-    curr_length > prev_lenght ? counter++ : (counter = 0);
-    prev_lenght = curr_length;
-
-    pthread_mutex_unlock(&current->sync);
-
-    current = current->next;
-
-    if (current == NULL) {
-      (*iterations)++;
-
-      current = list->first;
-    }
-  }
-
-  return NULL;
+void signal_handler(int sig) {
+  char *message = "\nReceived signal! Terminate the process...\n";
+  write(1, message, strlen(message));
 }
 
-void *search_descend(void *arg) {
-  thread_arg_t *thread_arg = (thread_arg_t *)arg;
+int compare_ascend(int curr, int prev) { return curr > prev; }
 
+int compare_descend(int curr, int prev) { return curr < prev; }
+
+int compare_equal(int curr, int prev) { return curr == prev; }
+
+void *search(void *arg) {
+  int err;
+
+  search_thread_arg_t *thread_arg = (search_thread_arg_t *)arg;
   list_t *list = thread_arg->list;
   size_t *iterations = thread_arg->counter, counter = 0;
+  int (*compare)(int, int) = thread_arg->compare;
 
-  node_t *current = list->first;
-
-  int prev_lenght = 0, curr_length;
-
-  while (1) {
-    pthread_mutex_lock(&current->sync);
-
-    curr_length = strlen(current->buf);
-    curr_length < prev_lenght ? counter++ : (counter = 0);
-    prev_lenght = curr_length;
-
-    pthread_mutex_unlock(&current->sync);
-
-    current = current->next;
-
-    if (current == NULL) {
-      (*iterations)++;
-
-      current = list->first;
-    }
+  if (!list) {
+    printf("List points to NULL!");
+    return NULL;
   }
 
-  return NULL;
-}
-
-void *search_equal(void *arg) {
-  thread_arg_t *thread_arg = (thread_arg_t *)arg;
-
-  list_t *list = thread_arg->list;
-  size_t *iterations = thread_arg->counter, counter = 0;
+  // Look at list's head safety
+  err = pthread_mutex_lock(&list->sync);
+  if (err) {
+    printf("Can't lock mutex bc of %s!\n", strerror(err));
+    return NULL;
+  }
 
   node_t *current = list->first;
 
-  int prev_lenght = 0, curr_length;
+  pthread_mutex_unlock(&list->sync);
+
+  int prev_length = 0, curr_length;
 
   while (1) {
-    pthread_mutex_lock(&current->sync);
+
+    /* Set cancel state = DISABLED, bc we don't want our thread cancel in the
+     middle of iteration.
+     From the man: None of the mutex functions is a
+     cancellation point, not even pthread_mutex_lock, in spite of the fact that
+     it can suspend a thread for arbitrary durations. So, does we even need
+     pthread_setcancelstate?
+     If there is some error in locking, we print it out using printf(), which is
+     cancellation point.
+     But if we in error branch, what is the problem with cancel our thread in
+     this point? Ask seminarist about this ... */
+
+    err = pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
+    if (err) {
+      printf("Can't set PTHREAD_CANCEL_DISABLE state bc of %s!", strerror(err));
+      return NULL;
+    }
+
+    err = pthread_mutex_lock(&current->sync);
+    if (err) {
+      printf("Can't lock mutex bc of %s!\n", strerror(err));
+      break;
+    }
 
     curr_length = strlen(current->buf);
-    curr_length == prev_lenght ? counter++ : (counter = 0);
-    prev_lenght = curr_length;
+
+    (compare(curr_length, prev_length)) ? (counter++) : (counter = 0);
+
+    prev_length = curr_length;
 
     pthread_mutex_unlock(&current->sync);
 
@@ -100,32 +89,60 @@ void *search_equal(void *arg) {
 
     if (current == NULL) {
       (*iterations)++;
+
+      err = pthread_mutex_lock(&list->sync);
+      if (err) {
+        printf("Can't lock mutex bc of %s!\n", strerror(err));
+        return NULL;
+      }
+
       current = list->first;
+
+      pthread_mutex_unlock(&list->sync);
     }
+
+    err = pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+    if (err) {
+      printf("Can't set PTHREAD_CANCEL_ENABLE state bc of %s!", strerror(err));
+      return NULL;
+    }
+
+    // Set cancel point, bc we do not have other cancel point.
+    pthread_testcancel();
   }
 
   return NULL;
 }
 
 void *swap(void *arg) {
-  thread_arg_t *thread_arg = (thread_arg_t *)arg;
+  int err;
 
+  swap_thread_arg_t *thread_arg = (swap_thread_arg_t *)arg;
   list_t *list = thread_arg->list;
   size_t *counter = thread_arg->counter;
 
-  int err;
-
   if (!list) {
+    printf("List points to NULL!");
     return NULL;
   }
 
   while (1) {
     node_t *prev = NULL, *curr = NULL, *next = NULL;
 
+    int prob_counter = 0, make_swap = 0;
+
     while (1) {
-      int make_swap = rand() % 2;
+      err = pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
+      if (err) {
+        printf("Can't set PTHREAD_CANCEL_DISABLE state bc of %s!",
+               strerror(err));
+        return NULL;
+      }
+
+      make_swap = (prob_counter > 3);
 
       if (!make_swap) {
+        prob_counter = (prob_counter + 1) % 10;
         continue;
       }
 
@@ -181,6 +198,8 @@ void *swap(void *arg) {
 
         prev = curr;
 
+        prob_counter = (prob_counter + 1) % 10;
+
         pthread_mutex_unlock(&list->sync);
         pthread_mutex_unlock(&curr->sync);
         pthread_mutex_unlock(&next->sync);
@@ -231,53 +250,149 @@ void *swap(void *arg) {
         node_t *tmp = prev;
         prev = curr;
 
+        prob_counter = (prob_counter + 1) % 10;
+
         pthread_mutex_unlock(&tmp->sync);
         pthread_mutex_unlock(&curr->sync);
         pthread_mutex_unlock(&next->sync);
       }
+
+      err = pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+      if (err) {
+        printf("Can't set PTHREAD_CANCEL_ENABLE state bc of %s!",
+               strerror(err));
+        return NULL;
+      }
+
+      pthread_testcancel();
     }
+
+    err = pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+    if (err) {
+      printf("Can't set PTHREAD_CANCEL_ENABLE state bc of %s!", strerror(err));
+      return NULL;
+    }
+
+    pthread_testcancel();
   }
 }
 
-int main() {
+void print_statistic(size_t *counters) {
+  printf("List stats:\n"
+         "\tThread (ascending pairs):  %zu iteration(s)\n"
+         "\tThread (descending pairs): %zu iteration(s)\n"
+         "\tThread (equal pairs):      %zu iteration(s)\n"
+         "\tFisrt swapping thread:     %zu successful swap(s)\n"
+         "\tSecond swapping thread:    %zu successful swap(s)\n"
+         "\tThird swapping thread:     %zu successful swap(s)\n",
+         counters[0], counters[1], counters[2], counters[3], counters[4],
+         counters[5]);
+}
+
+int main(int argc, char **argv) {
   // srand(time(0));
 
-  list_t *list = list_init(LIST_SIZE);
+  if (argc != 2) {
+    printf("Usage: %s <list_size>\n", argv[0]);
+
+    return 1;
+  }
+
+  int list_size = atoi(argv[1]);
+  list_t *list = list_init(list_size);
+
+  if (list == NULL) {
+    printf("List is not initialized!\n");
+    return 1;
+  }
 
   int err;
 
-  pthread_t tids[THREAD_COUNT];
+  // Fill mask, so children threads won't react on signals
+  sigset_t thread_mask;
 
-  void *(*thread_funcs[THREAD_COUNT])(void *) = {
-      search_ascend, search_descend, search_equal, swap, swap, swap};
+  err = sigfillset(&thread_mask);
+  if (err == -1) {
+    printf("Can't fill mask bc of %s!\n", strerror(errno));
+    return 1;
+  }
+
+  err = pthread_sigmask(SIG_BLOCK, &thread_mask, NULL);
+  if (err) {
+    printf("Can't set mask bc of %s!\n", strerror(err));
+    return 1;
+  }
+
+  pthread_t tids[THREAD_COUNT];
 
   size_t counters[THREAD_COUNT] = {0, 0, 0, 0, 0, 0};
 
-  thread_arg_t args[THREAD_COUNT] = {
-      {list, &counters[0]}, {list, &counters[1]}, {list, &counters[2]},
-      {list, &counters[3]}, {list, &counters[4]}, {list, &counters[5]},
-  };
+  search_thread_arg_t search_args[SEARCH_THREAD_COUNT] = {
+      {list, &counters[0], compare_ascend},
+      {list, &counters[1], compare_descend},
+      {list, &counters[2], compare_equal}};
 
-  for (int i = 0; i < THREAD_COUNT; i++) {
-    err = pthread_create(&tids[i], NULL, thread_funcs[i], &args[i]);
+  swap_thread_arg_t swap_args[SWAP_THREAD_COUNT] = {
+      {list, &counters[3]}, {list, &counters[4]}, {list, &counters[5]}};
+
+  int thread_num = 0;
+
+  for (; thread_num < SEARCH_THREAD_COUNT; thread_num++) {
+    err = pthread_create(&tids[thread_num], NULL, search,
+                         &search_args[thread_num]);
     if (err != 0) {
-      printf("Error in creating thread #%d because of %s!\n", i, strerror(err));
+      printf("Error in creating thread #%d because of %s!\n", thread_num,
+             strerror(err));
       return 1;
     }
   }
 
-  while (1) {
-    printf("List stats:\n"
-           "\tThread (ascending pairs):  %zu iteration(s)\n"
-           "\tThread (descending pairs): %zu iteration(s)\n"
-           "\tThread (equal pairs):      %zu iteration(s)\n"
-           "\tFisrt swapping thread:     %zu successful swap(s)\n"
-           "\tSecond swapping thread:    %zu successful swap(s)\n"
-           "\tThird swapping thread:     %zu successful swap(s)\n",
-           counters[0], counters[1], counters[2], counters[3], counters[4],
-           counters[5]);
-    sleep(1);
+  for (; thread_num < THREAD_COUNT; thread_num++) {
+    err = pthread_create(&tids[thread_num], NULL, swap,
+                         &swap_args[thread_num - 3]);
+    if (err != 0) {
+      printf("Error in creating thread #%d because of %s!\n", thread_num,
+             strerror(err));
+      return 1;
+    }
   }
+
+  // Unblock SIGINT
+  sigset_t main_mask;
+
+  err = sigaddset(&main_mask, SIGINT);
+  if (err == -1) {
+    printf("Can't fill mask bc of %s!\n", strerror(errno));
+    return 1;
+  }
+
+  err = pthread_sigmask(SIG_UNBLOCK, &main_mask, &thread_mask);
+  if (err) {
+    printf("Can't set mask bc of %s!\n", strerror(err));
+    return 1;
+  }
+
+  struct sigaction act;
+  memset(&act, 0, sizeof(struct sigaction));
+  act.sa_handler = signal_handler;
+  act.sa_flags = SA_RESTART;
+
+  err = sigaction(SIGINT, &act, NULL);
+  if (err != 0) {
+    printf("Error in sigaction because of %s!\n", strerror(err));
+    return 1;
+  }
+
+  // Wait until there is SIGINT
+  pause();
+
+  // Bc our threads have infty cycle while(1), we can't just join it, so cancel
+  // all of it.
+  for (int i = 0; i < THREAD_COUNT; i++) {
+    err = pthread_cancel(tids[i]);
+  }
+
+  print_statistic(counters);
 
   for (int i = 0; i < THREAD_COUNT; i++) {
     err = pthread_join(tids[i], NULL);
@@ -286,6 +401,8 @@ int main() {
       return 1;
     }
   }
+
+  list_destroy(list);
 
   return 0;
 }
