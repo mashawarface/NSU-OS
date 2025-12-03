@@ -23,15 +23,17 @@ list_t *list_init(size_t size) {
   list_t *list = malloc(sizeof(list_t));
   if (list == NULL) {
     printf("Error in allocating memory for list!\n");
+
     return NULL;
   }
 
   list->first = NULL;
 
   err = pthread_rwlock_init(&list->sync, NULL);
-  if (err != 0) {
+  if (err) {
     printf("Error in initializing of rwlock because of %s!\n", strerror(err));
     free(list);
+
     return NULL;
   }
 
@@ -40,7 +42,7 @@ list_t *list_init(size_t size) {
   size_t added = 0;
 
   while (added != size) {
-    /* Start of node's initializing */
+    // Start of node's initializing.
     node_t *node = malloc(sizeof(node_t));
     if (node == NULL) {
       printf("Error in allocating memory for node!\n");
@@ -51,14 +53,14 @@ list_t *list_init(size_t size) {
     generate_string(node->buf, MAX_LENGTH);
 
     err = pthread_rwlock_init(&node->sync, NULL);
-    if (err != 0) {
+    if (err) {
       printf("Error in initializing of rwlock because of %s!\n", strerror(err));
       list_destroy(list);
       return NULL;
     }
 
     node->next = NULL;
-    /* End of node's initializing */
+    // End of node's initializing.
 
     if (!list->first) {
       list->first = node;
