@@ -254,8 +254,21 @@ int main() {
 
     pthread_t tid;
     pthread_attr_t attr;
-    pthread_attr_init(&attr);
-    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+    err = pthread_attr_init(&attr);
+    if (err != 0) {
+      logger_log(logger, ERROR, "Error in pthread_attr_init: %s",
+                 strerror(err));
+      close(*client_fd);
+      continue;
+    }
+
+    err = pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+    if (err != 0) {
+      logger_log(logger, ERROR, "Error in pthread_attr_setdetachstate: %s",
+                 strerror(err));
+      close(*client_fd);
+      continue;
+    }
 
     err = pthread_create(&tid, &attr, handle_client, client_fd);
     if (err != 0) {
